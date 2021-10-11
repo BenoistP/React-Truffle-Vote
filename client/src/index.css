@@ -1,0 +1,117 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+/*
+ https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.css
+*/
+
+.inactive-state-progressbar {
+  display: -ms-flexbox;
+  display: flex;
+  height: 1rem;
+  overflow: hidden;
+  line-height: 0;
+  font-size: 0.75rem;
+  background-color: #e9ecef;
+  border-radius: 0.25rem;
+}
+
+.inactive-state-progressbar-bar {
+  font-weight: normal;
+  color: rgb(0, 0, 0);
+  border-right: solid 5px #555;
+
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-pack: center;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+  white-space: nowrap;
+  background-color: #AAA;
+  transition: width 0.6s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inactive-state-progressbar-bar {
+    transition: none;
+  }
+}
+.inactive-state-progressbar-bar-striped {
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-size: 1rem 1rem;
+}
+
+.inactive-state-progressbar-bar-animated {
+  animation: progress-bar-stripes 2s linear infinite;
+  animation-direction: reverse;
+
+  -webkit-animation: progress-bar-stripes 2s linear infinite;
+  -webkit-animation-direction: reverse;
+}
+
+
+
+
+
+
+.active-state-progressbar {
+
+  display: -ms-flexbox;
+  display: flex;
+  height: 1rem;
+  overflow: hidden;
+  line-height: 0;
+  font-size: 1rem;
+  background-color: #e9ecef;
+  border-radius: 0.25rem;
+}
+
+.active-state-progressbar-bar {
+  font-weight: bolder;
+  color: white;
+  background-color: #0d6efd;
+  border-right: solid 5px #555;
+
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-pack: center;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+  white-space: nowrap;
+  transition: width 0.6s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .custom-progressbar-bar {
+    transition: none;
+  }
+}
+.active-state-progressbar-bar-striped {
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-size: 1rem 1rem;
+}
+
+.active-state-progressbar-bar-animated {
+  animation: progress-bar-stripes 2s linear infinite;
+  animation-direction: reverse;
+
+  -webkit-animation: progress-bar-stripes 2s linear infinite;
+  -webkit-animation-direction: reverse;
+}

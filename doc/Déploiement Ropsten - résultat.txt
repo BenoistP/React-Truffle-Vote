@@ -1,0 +1,38 @@
+Starting migrations...
+======================
+> Network name:    'ropsten'
+> Network id:      3
+> Block gas limit: 8000000 (0x7a1200)
+
+
+3_deploy_contractsVoting.js
+===========================
+
+   Deploying 'Voting_03'
+   ---------------------
+   > transaction hash:    0x2da708aead0a56f4d7c28ba2bafe80b19555648344a6540a922e9827f3b701e1
+   > Blocks: 1            Seconds: 48
+   > contract address:    0x6d1BC7E71B4162211B8eb70fdf3a8Dadd53C0f21
+   > block number:        11202435
+   > block timestamp:     1633887373
+   > account:             0x2311C8042D56B6aBABdFB3af738662811DeD0f8B
+   > balance:             14.963152605115539556
+   > gas used:            2564617 (0x272209)
+   > gas price:           2.667500012 gwei
+   > value sent:          0 ETH
+   > total cost:          0.006841115878275404 ETH
+
+   Pausing for 2 confirmations...
+   ------------------------------
+   > confirmation number: 2 (block: 11202437)
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:     0.006841115878275404 ETH
+
+
+Summary
+=======
+> Total deployments:   1
+> Final cost:          0.006841115878275404 ETH

@@ -1,0 +1,94 @@
+{
+  "votingContract" :
+    {
+      "app" :
+        {
+          "title": "Propositions de vote"
+          ,
+    
+          "toolbar":
+            {
+              "reload" : "Recharger",
+              "connectedAddr" : "Connecté:",
+              "ownerAddr" : "Gestionnaire:"
+            }
+          ,
+          "dashboard":
+            {
+              "title": "Tableau de bord",
+              "status" :
+                {
+                  "title" : "État",
+                  "states": {
+                    "0": "Enregistrement des votants",
+                    "1": "Soumission des propositions en cours",
+                    "2": "Soumission des propositions terminée",
+                    "3": "Session de vote en cours",
+                    "4": "Session de vote terminée",
+                    "5": "Décompte effectué"
+                  }
+        
+                }
+
+            }
+            ,
+          "admin":
+            {
+              "title": "Administration",
+              "whitelist" :
+                {
+                  "whitelistedAddresses" : "Liste des comptes autorisés",
+                  "whitelistNewAccount" : "Autoriser un nouveau compte",
+                  "whitelist" : "Autoriser",
+                  "addressPlaceHolder" : "0x0000000000000000000000000000000000000000"
+                }
+                ,
+                "toolbar":
+                {
+                  "nextstate" : "Étape suivante",
+                  "countAndTallyVotes": "Décompter les votes"
+                },
+                "action" :
+                {
+                  "end": "Fin. Plus d'action disponible"
+                }
+    
+            }
+
+            ,
+            "user":
+            {
+              "action" :
+                {
+                  "wait": "En attente de : ",
+                  "submitProposal": "Soumettre une proposition",
+                  "vote": "Voter",
+                  "result": "Résultat des votes"
+                }
+                ,
+                "proposals" :
+                {
+                  "title" : "Propositions",
+                  "displayAll"   : "Les afficher toutes",
+                  "input":
+                  {
+                    "title" : "Vos propositions",
+                    "id": "#",
+                    "description" : "Description",
+                    "action" : "Action",
+                    "placeholder" : "Faîtes votre proposition !",
+                    "new" : "Nouvelle proposition",
+                    "send" : "Envoyer",
+                    "cancel" : "Annuler",
+                    "select" : "Choisir",
+                    "selected" : "A voté",
+                    "results" : "Résultats"
+                    }
+                }
+    
+            }
+
+        }
+
+    }
+}
