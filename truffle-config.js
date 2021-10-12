@@ -28,7 +28,7 @@ module.exports = {
 
   // GANACHE LOCAL
 
-  development:
+  devlocal:
    {
     host: "127.0.0.1", // localhost de notre réseau ganache 
     port: 7545, // le port rpc de notre réseau ganache 
