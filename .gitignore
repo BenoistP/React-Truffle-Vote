@@ -1,6 +1,0 @@
-.secret
-soljson-*.js
-*.code-workspace
-test.7z
-# dependencies
-/node_modules

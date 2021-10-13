@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/React-Truffle-Vote/static/css/main.8729efe4.chunk.css",
+    "main.js": "/React-Truffle-Vote/static/js/main.24ec4b90.chunk.js",
+    "main.js.map": "/React-Truffle-Vote/static/js/main.24ec4b90.chunk.js.map",
+    "runtime-main.js": "/React-Truffle-Vote/static/js/runtime-main.3f9dff09.js",
+    "runtime-main.js.map": "/React-Truffle-Vote/static/js/runtime-main.3f9dff09.js.map",
+    "static/css/2.a5ff5de7.chunk.css": "/React-Truffle-Vote/static/css/2.a5ff5de7.chunk.css",
+    "static/js/2.1b02aeb4.chunk.js": "/React-Truffle-Vote/static/js/2.1b02aeb4.chunk.js",
+    "static/js/2.1b02aeb4.chunk.js.map": "/React-Truffle-Vote/static/js/2.1b02aeb4.chunk.js.map",
+    "index.html": "/React-Truffle-Vote/index.html",
+    "precache-manifest.15b302c79f930c91e12bdd24bfb7bd02.js": "/React-Truffle-Vote/precache-manifest.15b302c79f930c91e12bdd24bfb7bd02.js",
+    "service-worker.js": "/React-Truffle-Vote/service-worker.js",
+    "static/css/2.a5ff5de7.chunk.css.map": "/React-Truffle-Vote/static/css/2.a5ff5de7.chunk.css.map",
+    "static/css/main.8729efe4.chunk.css.map": "/React-Truffle-Vote/static/css/main.8729efe4.chunk.css.map",
+    "static/media/getFetch.cjs": "/React-Truffle-Vote/static/media/getFetch.51c934af.cjs"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.3f9dff09.js",
+    "static/css/2.a5ff5de7.chunk.css",
+    "static/js/2.1b02aeb4.chunk.js",
+    "static/css/main.8729efe4.chunk.css",
+    "static/js/main.24ec4b90.chunk.js"
+  ]
+}
