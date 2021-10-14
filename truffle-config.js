@@ -26,21 +26,18 @@ module.exports = {
 
   networks: {
 
-  // GANACHE LOCAL
-
-  devlocal:
-   {
-    host: "127.0.0.1", // localhost de notre réseau ganache 
-    port: 7545, // le port rpc de notre réseau ganache 
-    network_id: "3333",// le network id de notre réseau ganache 
-   }
+  // networks : à commenter pour les tests
 /*
-    develop: {
-      port: 8545
-    }
-*/
-,
-ropsten: {
+    // GANACHE LOCAL
+    devlocal:
+     {
+        host: "127.0.0.1", // localhost de notre réseau ganache 
+        port: 7545, // le port rpc de notre réseau ganache 
+        network_id: "3333",// le network id de notre réseau ganache 
+     }
+   ,
+    ropsten:
+    {
   //     provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/YOUR-PROJECT-ID`),
        provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/`+myInfuraProjectId),
        network_id: network_id_ropsten,       // Ropsten's id
@@ -49,6 +46,7 @@ ropsten: {
        timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
        skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
        }
-  } // networks
+*/
+} // networks
 
 };

@@ -14,8 +14,8 @@ import "./Admin_WL_03.sol";
 // SafeMath
 // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v3.1.0/contracts/math/SafeMath.sol
 //import 'https://raw.githubusercontent.com/OpenZeppelin/openzeppelin-contracts/release-v3.1.0/contracts/math/SafeMath.sol';
-// import '@openzeppelin/contracts/math/SafeMath.sol';
-import "./openzeppelin-contracts/contracts/math/SafeMath.sol";
+import '@openzeppelin/contracts/math/SafeMath.sol';
+// import "./openzeppelin-contracts/contracts/math/SafeMath.sol";
 
 
 contract Voting_03 is Admin_WL_03

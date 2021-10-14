@@ -9,8 +9,8 @@ pragma solidity ^0.6.11;
 
 // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v3.1.0/contracts/access/Ownable.sol
 // import "https://raw.githubusercontent.com/OpenZeppelin/openzeppelin-contracts/release-v3.1.0/contracts/access/Ownable.sol";
-//import '@openzeppelin/contracts/access/Ownable.sol';
-import "./openzeppelin-contracts/contracts/access/Ownable.sol";
+import '@openzeppelin/contracts/access/Ownable.sol';
+// import "./openzeppelin-contracts/contracts/access/Ownable.sol";
 
     // Dependencies :
      // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v3.1.0/contracts/GSN/Context.sol
