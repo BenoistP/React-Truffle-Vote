@@ -1,2 +1,2 @@
 truffle test .\test\erc20.test.js --compile-none
-truffle test .\test\Voting-test.js --compile-none
+truffle test .\test\Voting.test.js --compile-none
