@@ -1,3 +1,7 @@
 truffle test .\test\erc20.test.js --compile-none
 truffle test .\test\Voting.test.js --compile-none
-truffle test .\test\Voting.test.js --compile-none -g "Admin_WL"
+
+
+truffle test .\test\Voting.test.js -g "Voting_03-Ownable" --compile-none 
+truffle test .\test\Voting.test.js -g "Voting_03-Admin" --compile-none
+truffle test .\test\Voting.test.js -g "Voting_03-Voting" --compile-none
