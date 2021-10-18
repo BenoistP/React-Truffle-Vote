@@ -6,8 +6,8 @@ var assert = require('chai').assert;
 
 // https://www.chaijs.com/plugins/chai-fuzzy/
 // https://www.npmjs.com/package/chai-fuzzy
-var chai = require('chai');
-chai.use(require('chai-fuzzy'));
+// var chai = require('chai');
+// chai.use(require('chai-fuzzy'));
 
 const Voting_03 = artifacts.require('Voting_03');
 
@@ -20,28 +20,24 @@ const WorkflowStatus_VotingSessionStarted = 3;
 const WorkflowStatus_VotingSessionEnded = 4;
 const WorkflowStatus_VotesTallied = 5;
 
-// --------------------------------------------------------------------------------------------------------------
+// ==============================================================================================================
+// Serie 01
+// ==============================================================================================================
 
 describe('Serie 01 : Voting Contract tests', function()
 {
 
+// --------------------------------------------------------------------------------------------------------------
+// Serie 01 - 01 : Ownable
 // --------------------------------------------------------------------------------------------------------------
 describe('Serie 01 - 01  : Ownable tests', function()
   {
 
     contract('Voting_03-Ownable', function (accounts)
     {
-      // const _name = 'ALYRA';
-      // const _symbol = 'ALY';
-      // const _initialsupply = new BN(1000);
-      // const _decimals = new BN(18);
-
       const account_00 = accounts[0];
       const account_01 = accounts[1];
       const account_02 = accounts[2];
-      // const account_03 = accounts[3];
-      // const account_04 = accounts[4];
-
       const account_00_initial_owner_contract_Voting_03 = account_00;
 
       before(async () =>
@@ -118,17 +114,14 @@ describe('Serie 01 - 01  : Ownable tests', function()
 
   }); // describe('Serie 01'
 
-  // --------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------
+// Serie 01 - 02 : Admin
+// --------------------------------------------------------------------------------------------------------------
 
   describe('Serie 01 - 02 : Voting_03-Admin_WL tests', function()
   {
     contract('Voting_03-Admin_WL', function (accounts)
     {
-      // const _name = 'ALYRA';
-      // const _symbol = 'ALY';
-      // const _initialsupply = new BN(1000);
-      // const _decimals = new BN(18);
-
       const account_00 = accounts[0];
       const account_01 = accounts[1];
       const account_02 = accounts[2];
@@ -198,8 +191,6 @@ describe('Serie 01 - 01  : Ownable tests', function()
       {
         res = await this.contract_Voting_03_Instance.getWhiteListedAddresses(  {from: account_03 } );
         expectedRes = [ account_00_initial_owner_contract_Voting_03 , account_01 ];
-        // console.log(res);
-        // console.log(expectedRes);
         expect( res ).to.have.members( expectedRes ) ;
       });
 
@@ -207,139 +198,206 @@ describe('Serie 01 - 01  : Ownable tests', function()
       {
         res = await this.contract_Voting_03_Instance.getWhiteListedAddresses(  {from: account_03 } );
         unexpectedRes = [ account_03 ];
-        // console.log(res);
-        // console.log(expectedRes);
         expect( await this.contract_Voting_03_Instance.getWhiteListedAddresses(  {from: account_03 } ) ).not.to.have.members( unexpectedRes ) ;
       });
 
-    }); // contract('Voting_03'
-  }); // describe('Serie 02'
+    }); // contract 'Voting_03-Admin_WL'
+  }); // 'Serie 01 - 02 : Voting_03-Admin_WL tests'
 
 // --------------------------------------------------------------------------------------------------------------
-
-describe('Serie 01 - 03 : Voting_03 tests', function()
+// Serie 01 - 03 : Voting
+// --------------------------------------------------------------------------------------------------------------
+describe('Serie 01 - 03 : Voting_03-Voting_03', function()
 {
-  contract('Voting_03 tests', function (accounts)
+
+  // --------------------
+  // Transitions
+  // --------------------
+  describe('Serie 01 - 03 - 01 : Voting_03-Voting_03-Transitions : Transitions consistency', function()
   {
-    // const _name = 'ALYRA';
-    // const _symbol = 'ALY';
-    // const _initialsupply = new BN(1000);
-    // const _decimals = new BN(18);
-
-    const account_00 = accounts[0];
-    const account_01 = accounts[1];
-    const account_02 = accounts[2];
-    const account_03 = accounts[3];
-    const account_04 = accounts[4];
-    const account_05 = accounts[5];
-
-    const account_00_initial_owner_contract_Voting_03 = account_00;
-
-    before(async () =>
-    {
-    this.contract_Voting_03_Instance = await Voting_03.new( {from: account_00_initial_owner_contract_Voting_03} );
-    });
-  /*
-    beforeEach(async () =>
-    {
-      this.ERC20Instance = await ERC20.new(_initialsupply,{from: owner});
-    });
-  */
-    it('Voting_03-Voting_03 : Contract is owned by account_00', async () =>
-    {
-      expect( await this.contract_Voting_03_Instance.owner() ).to.equal( account_00 );
-    });
-
-    it("Voting_03-Voting_03 : Initial state should be 'registering voters'", async () =>
-    {
-      currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
-      expectedStatus = new BN( WorkflowStatus_RegisteringVoters );
-      // console.log(currentStatus);
-      // console.log(expectedStatus);
-      // expect( currentStatus ).to.equal( expectedStatus );
-      expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
-    });
-
-    it("Voting_03-Voting_03 : Whitelist account 01", async () =>
-    {
-      await this.contract_Voting_03_Instance.whitelist( account_01, {from: account_00_initial_owner_contract_Voting_03} );
-      expect( await this.contract_Voting_03_Instance.isWhitelisted( account_01 ) ).to.be.true;
-    });
     
-    it("Voting_03-Voting_03 : Whitelist account 02", async () =>
+    contract('Voting_03-Voting_03-Transitions', function (accounts)
     {
-      await this.contract_Voting_03_Instance.whitelist( account_02, {from: account_00_initial_owner_contract_Voting_03} );
-      expect( await this.contract_Voting_03_Instance.isWhitelisted( account_02 ) ).to.be.true;
-    });
+      const account_00 = accounts[0];
+      const account_00_initial_owner_contract_Voting_03 = account_00;
 
-    it("Voting_03-Voting_03 : Whitelist account 03", async () =>
-    {
-      await this.contract_Voting_03_Instance.whitelist( account_03, {from: account_00_initial_owner_contract_Voting_03} );
-      expect( await this.contract_Voting_03_Instance.isWhitelisted( account_03 ) ).to.be.true;
-    });
+      before(async () =>
+      {
+      this.contract_Voting_03_Instance = await Voting_03.new( {from: account_00_initial_owner_contract_Voting_03} );
+      });
 
-    it("Voting_03-Voting_03 : Whitelist account 043", async () =>
-    {
-      await this.contract_Voting_03_Instance.whitelist( account_04, {from: account_00_initial_owner_contract_Voting_03} );
-      expect( await this.contract_Voting_03_Instance.isWhitelisted( account_04 ) ).to.be.true;
-    });
+      // Etat initial
+      it("Voting_03-Voting_03-Transitions : Initial state should be 'registering voters'", async () =>
+      {
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_RegisteringVoters );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
 
-    it("Voting_03-Voting_03 : Accounts addresses 01-04 should be whitelisted", async () =>
-    {
-      res = await this.contract_Voting_03_Instance.getWhiteListedAddresses(  {from: account_05 } );
-      expectedRes = [ account_01, account_02, account_03, account_04 ];
-      // console.log(res);
-      // console.log(expectedRes);
-      expect( res ).to.have.members( expectedRes ) ;
-    });
+      // Vérification de transition interdite de "Enregistrement des votants" à "Fin d'enregistrement des propositions"
+      it("Voting_03-Voting_03-Transitions : Transition forbidden : Should not switch to state 'EndProposalsRegistration'", async () =>
+      {
 
-    it("Voting_03-Voting_03 : Transition forbidden : Should not go to state 'EndProposalsRegistration'", async () =>
-    {
-
-      await expectRevert
-      (
-        this.contract_Voting_03_Instance.setStateEndProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
-        , "Not in 'ProposalsRegistrationStarted' state. -- Reason given: Not in 'ProposalsRegistrationStarted' state.." 
-      );
-      currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
-      expectedStatus = new BN( WorkflowStatus_RegisteringVoters );
-      // console.log(currentStatus);
-      // console.log(expectedStatus);
-      // expect( currentStatus ).to.equal( expectedStatus );
-      expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
-    });
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateEndProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'ProposalsRegistrationStarted' state. -- Reason given: Not in 'ProposalsRegistrationStarted' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_RegisteringVoters );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+      
+      // Passage de "Enregistrement des votants" à "Ouverture d'enregistrement des Propositions"
+      it("Voting_03-Voting_03-Transitions : Should transition to 'ProposalsRegistrationStarted'", async () =>
+      {
+        await this.contract_Voting_03_Instance.setStateStartProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_ProposalsRegistrationStarted );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
     
-    it("Voting_03-Voting_03 : Should transition to 'ProposalsRegistrationStarted'", async () =>
+      });
+
+
+
+      
+
+      // Vérification de transition interdite de "Ouverture d'enregistrement des Propositions" à "Ouverture d'enregistrement des Propositions"
+      it("Voting_03-Voting_03-Transitions : Transition forbidden : Already in 'ProposalsRegistration'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateStartProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'ProposalsRegistrationStarted' state. -- Reason given: Not in 'ProposalsRegistrationStarted' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_ProposalsRegistrationStarted );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+
+
+
+
+      // Passage de "Ouverture d'enregistrement des Propositions" à "Fin d'enregistrement des propositions"
+      it("Voting_03-Voting_03-Transitions : Should transition to 'ndProposalsRegistration'", async () =>
+      {
+        await this.contract_Voting_03_Instance.setStateEndProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_ProposalsRegistrationEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // Passage de "Fin d'enregistrement des propositions" à "Ouverture des votes"
+      it("Voting_03-Voting_03-Transitions : Should transition to 'StartVotingSession'", async () =>
+      {
+        await this.contract_Voting_03_Instance.setStateStartVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_VotingSessionStarted );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // Passage de "Ouverture des votes" à "Fermeture des votes"
+      it("Voting_03-Voting_03-Transitions : Should transition to 'EndVotingSession'", async () =>
+      {
+        await this.contract_Voting_03_Instance.setStateEndVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_VotingSessionEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // Passage de "Fermeture des votes" à "Décomptage des votes effectué" 
+      it("Voting_03-Voting_03-Transitions : Should transition to 'VotesTallied'", async () =>
+      {
+        await this.contract_Voting_03_Instance.countAndTallyVotes( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_VotesTallied );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      
+
+
+    }); // Contract 'Voting_03-Voting_03-Transitions'
+
+    // WorkflowStatus_VotesTallied
+      // countVotes
+
+  }); // Serie 01 - 03 - 01 : Voting_03-Voting_03-Transitions : Transitions
+
+
+  // --------------------
+  // Fonctionnement
+  // --------------------
+  describe('Serie 01 - 03 - 02 : Voting_03-Voting_03-Fonctionnement : Fonctionnement', function()
+  {
+    contract('Voting_03 Fonctionnement', function (accounts)
     {
-      await this.contract_Voting_03_Instance.setStateStartProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
-      currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
-      expectedStatus = new BN( WorkflowStatus_ProposalsRegistrationStarted );
-      // console.log(currentStatus);
-      // console.log(expectedStatus);
-      // expect( currentStatus ).to.equal( expectedStatus );
-      expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
-  
-    });
-  
-  
-  
-    it("Voting_03-Voting_03 : Should transition to 'setStateEndProposalsRegistration'", async () =>
-    {
-      await this.contract_Voting_03_Instance.setStateEndProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
-      currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
-      expectedStatus = new BN( WorkflowStatus_ProposalsRegistrationEnded );
-      // console.log(currentStatus);
-      // console.log(expectedStatus);
-      // expect( currentStatus ).to.equal( expectedStatus );
-      expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
-    });
-  
-  }); // contract('Voting_03'
+       const account_00 = accounts[0];
+       const account_01 = accounts[1];
+       const account_02 = accounts[2];
+       const account_03 = accounts[3];
+       const account_04 = accounts[4];
+       const account_05 = accounts[5];
+       const account_00_initial_owner_contract_Voting_03 = account_00;
+
+       before(async () =>
+       {
+       this.contract_Voting_03_Instance = await Voting_03.new( {from: account_00_initial_owner_contract_Voting_03} );
+       });
+     /*
+       beforeEach(async () =>
+       {
+         this.ERC20Instance = await ERC20.new(_initialsupply,{from: owner});
+       });
+     */
+       it('Voting_03-Voting_03 : Contract is owned by account_00', async () =>
+       {
+         expect( await this.contract_Voting_03_Instance.owner() ).to.equal( account_00 );
+       });
 
 
-}); // describe('Serie 01-03'
+       it("Voting_03-Voting_03 : Whitelist account 01", async () =>
+       {
+         await this.contract_Voting_03_Instance.whitelist( account_01, {from: account_00_initial_owner_contract_Voting_03} );
+         expect( await this.contract_Voting_03_Instance.isWhitelisted( account_01 ) ).to.be.true;
+       });
+       
+       it("Voting_03-Voting_03 : Whitelist account 02", async () =>
+       {
+         await this.contract_Voting_03_Instance.whitelist( account_02, {from: account_00_initial_owner_contract_Voting_03} );
+         expect( await this.contract_Voting_03_Instance.isWhitelisted( account_02 ) ).to.be.true;
+       });
 
-// --------------------------------------------------------------------------------------------------------------
+       it("Voting_03-Voting_03 : Whitelist account 03", async () =>
+       {
+         await this.contract_Voting_03_Instance.whitelist( account_03, {from: account_00_initial_owner_contract_Voting_03} );
+         expect( await this.contract_Voting_03_Instance.isWhitelisted( account_03 ) ).to.be.true;
+       });
 
-}); // describe('Serie 01'
+       it("Voting_03-Voting_03 : Whitelist account 043", async () =>
+       {
+         await this.contract_Voting_03_Instance.whitelist( account_04, {from: account_00_initial_owner_contract_Voting_03} );
+         expect( await this.contract_Voting_03_Instance.isWhitelisted( account_04 ) ).to.be.true;
+       });
+
+       it("Voting_03-Voting_03 : Accounts addresses 01-04 should be whitelisted", async () =>
+       {
+         res = await this.contract_Voting_03_Instance.getWhiteListedAddresses(  {from: account_05 } );
+         expectedRes = [ account_01, account_02, account_03, account_04 ];
+         // console.log(res);
+         // console.log(expectedRes);
+         expect( res ).to.have.members( expectedRes ) ;
+       });
+
+
+   
+     }); // contract Voting_03'
+
+  }); // Serie 01 - 03 - 02 : Voting_03-Voting_03-X : Fonctionnement
+
+}); // Serie 01 - 03 : Voting
+    
+
+}); // Serie 01
 
