@@ -13,12 +13,12 @@ const Voting_03 = artifacts.require('Voting_03');
 
 // constants
 const BIGNUMBER_ZERO = new BN(0);
-const WorkflowStatus_RegisteringVoters = 0;
-const WorkflowStatus_ProposalsRegistrationStarted = 1;
-const WorkflowStatus_ProposalsRegistrationEnded = 2;
-const WorkflowStatus_VotingSessionStarted = 3;
-const WorkflowStatus_VotingSessionEnded = 4;
-const WorkflowStatus_VotesTallied = 5;
+const WorkflowStatus_00_RegisteringVoters = 0;
+const WorkflowStatus_01_ProposalsRegistrationStarted = 1;
+const WorkflowStatus_02_ProposalsRegistrationEnded = 2;
+const WorkflowStatus_03_VotingSessionStarted = 3;
+const WorkflowStatus_04_VotingSessionEnded = 4;
+const WorkflowStatus_05_VotesTallied = 5;
 
 // ==============================================================================================================
 // Serie 01
@@ -227,15 +227,15 @@ describe('Serie 01 - 03 : Voting_03-Voting_03', function()
       });
 
       // Etat initial
-      it("Voting_03-Voting_03-Transitions : Initial state should be 'registering voters'", async () =>
+      it("Voting_03-Voting_03-Transitions : 00 : Initial state should be 'registering voters'", async () =>
       {
         currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
-        expectedStatus = new BN( WorkflowStatus_RegisteringVoters );
+        expectedStatus = new BN( WorkflowStatus_00_RegisteringVoters );
         expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
       });
 
       // Vérification de transition interdite de "Enregistrement des votants" à "Fin d'enregistrement des propositions"
-      it("Voting_03-Voting_03-Transitions : Transition forbidden : Should not switch to state 'EndProposalsRegistration'", async () =>
+      it("Voting_03-Voting_03-Transitions : 01 : Transition forbidden : Should not go to state 'EndProposalsRegistration'", async () =>
       {
 
         await expectRevert
@@ -244,78 +244,378 @@ describe('Serie 01 - 03 : Voting_03-Voting_03', function()
           , "Not in 'ProposalsRegistrationStarted' state. -- Reason given: Not in 'ProposalsRegistrationStarted' state.." 
         );
         currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
-        expectedStatus = new BN( WorkflowStatus_RegisteringVoters );
+        expectedStatus = new BN( WorkflowStatus_00_RegisteringVoters );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // Vérification de transition interdite de "Enregistrement des votants" à "Ouverture de la session de vote"
+      it("Voting_03-Voting_03-Transitions : 02 : Transition forbidden : Should not go to state 'Ouverture de la session de vote'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateStartVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'ProposalsRegistrationEnded' state. -- Reason given: Not in 'ProposalsRegistrationEnded' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_00_RegisteringVoters );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // Vérification de transition interdite de "Enregistrement des votants" à "Fin de la session de vote"
+      it("Voting_03-Voting_03-Transitions : 03 : Transition forbidden : Should not go to state 'Fin de la session de vote'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateEndVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'VotingSessionStarted' state. -- Reason given: Not in 'VotingSessionStarted' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_00_RegisteringVoters );
         expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
       });
       
-      // Passage de "Enregistrement des votants" à "Ouverture d'enregistrement des Propositions"
-      it("Voting_03-Voting_03-Transitions : Should transition to 'ProposalsRegistrationStarted'", async () =>
+      // Vérification de transition interdite de "Enregistrement des votants" à "Décompte des votes effectué"
+      it("Voting_03-Voting_03-Transitions : 04 : Transition forbidden : Should not go to state 'Décompte des votes effectué'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.countAndTallyVotes( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'VotingSessionEnded' state. -- Reason given: Not in 'VotingSessionEnded' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_00_RegisteringVoters );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // ***************************************************************************************
+      // Passage de "Enregistrement des votants" (0) à "Ouverture d'enregistrement des Propositions" (1)
+      // ***************************************************************************************
+      it("Voting_03-Voting_03-Transitions : 0-9 : Should transition to 'ProposalsRegistrationStarted'", async () =>
       {
         await this.contract_Voting_03_Instance.setStateStartProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
         currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
-        expectedStatus = new BN( WorkflowStatus_ProposalsRegistrationStarted );
+        expectedStatus = new BN( WorkflowStatus_01_ProposalsRegistrationStarted );
         expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
     
       });
 
-
-
-      
-
-      // Vérification de transition interdite de "Ouverture d'enregistrement des Propositions" à "Ouverture d'enregistrement des Propositions"
-      it("Voting_03-Voting_03-Transitions : Transition forbidden : Already in 'ProposalsRegistration'", async () =>
+      // Vérification de transition interdite de "Ouverture d'enregistrement des Propositions" (1) à "Ouverture d'enregistrement des Propositions" (1)
+      it("Voting_03-Voting_03-Transitions : 1-0 : Transition forbidden : Already in 'ProposalsRegistration'", async () =>
       {
         await expectRevert
         (
           this.contract_Voting_03_Instance.setStateStartProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
-          , "Not in 'ProposalsRegistrationStarted' state. -- Reason given: Not in 'ProposalsRegistrationStarted' state.." 
+          , "Not in 'RegisteringVoters' state. -- Reason given: Not in 'RegisteringVoters' state.." 
         );
         currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
-        expectedStatus = new BN( WorkflowStatus_ProposalsRegistrationStarted );
+        expectedStatus = new BN( WorkflowStatus_01_ProposalsRegistrationStarted );
         expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
       });
 
+      // Vérification de transition interdite de "Enregistrement des Propositions" (1) à "Ouverture de la session de vote" (3)
+      it("Voting_03-Voting_03-Transitions : 1-1 : Transition forbidden : Should not go to state 'Ouverture de la session de vote'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateStartVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'ProposalsRegistrationEnded' state. -- Reason given: Not in 'ProposalsRegistrationEnded' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_01_ProposalsRegistrationStarted );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
 
+      // Vérification de transition interdite de "Enregistrement des Propositions" (1) à "Fin de la session de vote" (4)
+      it("Voting_03-Voting_03-Transitions : 1-2 : Transition forbidden : Should not go to state 'Fin de la session de vote'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateEndVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'VotingSessionStarted' state. -- Reason given: Not in 'VotingSessionStarted' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_01_ProposalsRegistrationStarted );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+      
+      // Vérification de transition interdite de "Enregistrement des Propositions" (1) à "Décompte des votes effectué" (5)
+      it("Voting_03-Voting_03-Transitions : 1-3 : Transition forbidden : Should not go to state 'Décompte des votes effectué'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.countAndTallyVotes( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'VotingSessionEnded' state. -- Reason given: Not in 'VotingSessionEnded' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_01_ProposalsRegistrationStarted );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
 
-
-
-      // Passage de "Ouverture d'enregistrement des Propositions" à "Fin d'enregistrement des propositions"
-      it("Voting_03-Voting_03-Transitions : Should transition to 'ndProposalsRegistration'", async () =>
+      // ***************************************************************************************
+      // Passage de "Ouverture d'enregistrement des Propositions" (1) à "Fin d'enregistrement des propositions" (2)
+      // ***************************************************************************************
+      it("Voting_03-Voting_03-Transitions : 1-9 : Should transition to 'ProposalsRegistration'", async () =>
       {
         await this.contract_Voting_03_Instance.setStateEndProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
         currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
-        expectedStatus = new BN( WorkflowStatus_ProposalsRegistrationEnded );
+        expectedStatus = new BN( WorkflowStatus_02_ProposalsRegistrationEnded );
         expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
       });
 
-      // Passage de "Fin d'enregistrement des propositions" à "Ouverture des votes"
-      it("Voting_03-Voting_03-Transitions : Should transition to 'StartVotingSession'", async () =>
+      // Vérification de transition interdite de "Fin d'enregistrement des propositions" (2) à "Ouverture d'enregistrement des Propositions" (1)
+      it("Voting_03-Voting_03-Transitions : 2-1 : Transition forbidden : Already in 'ProposalsRegistration'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateStartProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'RegisteringVoters' state. -- Reason given: Not in 'RegisteringVoters' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_02_ProposalsRegistrationEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // Vérification de transition interdite de "Fin d'enregistrement des propositions" (2) à "Fin d'enregistrement des propositions" (2)
+      it("Voting_03-Voting_03-Transitions : 2-2 : Transition forbidden : Should not go to state 'ProposalsRegistrationEnded'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateEndVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'VotingSessionStarted' state. -- Reason given: Not in 'VotingSessionStarted' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_02_ProposalsRegistrationEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // Vérification de transition interdite de "Fin d'enregistrement des propositions" (2) à "Fin de la session de vote" (4)
+      it("Voting_03-Voting_03-Transitions : 2-3 : Transition forbidden : Should not go to state 'End voting session'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateEndVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'VotingSessionStarted' state. -- Reason given: Not in 'VotingSessionStarted' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_02_ProposalsRegistrationEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+      
+      // Vérification de transition interdite de "Fin d'enregistrement des propositions" (2) à "Décompte des votes effectué" (5)
+      it("Voting_03-Voting_03-Transitions : 2-4 : Transition forbidden : Should not go to state 'Votes tallied'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.countAndTallyVotes( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'VotingSessionEnded' state. -- Reason given: Not in 'VotingSessionEnded' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_02_ProposalsRegistrationEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // ***************************************************************************************
+      // Passage de "Fin d'enregistrement des propositions" (2) à "Ouverture des votes" (3)
+      // ***************************************************************************************
+      it("Voting_03-Voting_03-Transitions : 2-9 : Should transition to 'StartVotingSession'", async () =>
       {
         await this.contract_Voting_03_Instance.setStateStartVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
         currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
-        expectedStatus = new BN( WorkflowStatus_VotingSessionStarted );
+        expectedStatus = new BN( WorkflowStatus_03_VotingSessionStarted );
         expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
       });
 
-      // Passage de "Ouverture des votes" à "Fermeture des votes"
-      it("Voting_03-Voting_03-Transitions : Should transition to 'EndVotingSession'", async () =>
+      // Vérification de transition interdite de "Vote en cours" (3) à "Ouverture d'enregistrement des Propositions" (1)
+      it("Voting_03-Voting_03-Transitions : 3-1 : Transition forbidden : Already in 'ProposalsRegistration'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateStartProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'RegisteringVoters' state. -- Reason given: Not in 'RegisteringVoters' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_03_VotingSessionStarted );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // Vérification de transition interdite de "Vote en cours" (3) à "Fin d'enregistrement des propositions" (2)
+      it("Voting_03-Voting_03-Transitions : 3-2 : Transition forbidden : Should not go to state 'ProposalsRegistrationEnded'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateEndProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'ProposalsRegistrationStarted' state. -- Reason given: Not in 'ProposalsRegistrationStarted' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_03_VotingSessionStarted );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // Vérification de transition interdite de "Vote en cours" (3) à "Vote en cours" (3)
+      it("Voting_03-Voting_03-Transitions : 3-3 : Transition forbidden : Should not go to state 'StartVotingSession'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateStartVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'ProposalsRegistrationEnded' state. -- Reason given: Not in 'ProposalsRegistrationEnded' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_03_VotingSessionStarted );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+      
+      // Vérification de transition interdite de "Vote en cours" (3) à "Décompte des votes effectué" (5)
+      it("Voting_03-Voting_03-Transitions : 3-4 : Transition forbidden : Should not go to state 'Décompte des votes effectué'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.countAndTallyVotes( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'VotingSessionEnded' state. -- Reason given: Not in 'VotingSessionEnded' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_03_VotingSessionStarted );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // ***************************************************************************************
+      // Passage de "Session de vote en cours" (3) à "Fermeture des votes" (4)
+      // ***************************************************************************************
+      it("Voting_03-Voting_03-Transitions : 3-9 : Should transition to 'EndVotingSession'", async () =>
       {
         await this.contract_Voting_03_Instance.setStateEndVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
         currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
-        expectedStatus = new BN( WorkflowStatus_VotingSessionEnded );
+        expectedStatus = new BN( WorkflowStatus_04_VotingSessionEnded );
         expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
       });
 
-      // Passage de "Fermeture des votes" à "Décomptage des votes effectué" 
-      it("Voting_03-Voting_03-Transitions : Should transition to 'VotesTallied'", async () =>
+      // Vérification de transition interdite de "Vote terminé" (4) à "Ouverture d'enregistrement des Propositions" (1)
+      it("Voting_03-Voting_03-Transitions : 4-1 : Transition forbidden : Already in 'ProposalsRegistration'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateStartProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'RegisteringVoters' state. -- Reason given: Not in 'RegisteringVoters' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_04_VotingSessionEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // Vérification de transition interdite de "Vote terminé" (4) à "Fin d'enregistrement des propositions" (2)
+      it("Voting_03-Voting_03-Transitions : 4-2 : Transition forbidden : Should not go to state 'ProposalsRegistrationEnded'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateEndProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'ProposalsRegistrationStarted' state. -- Reason given: Not in 'ProposalsRegistrationStarted' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_04_VotingSessionEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // Vérification de transition interdite de "Vote terminé" (4) à "Vote en cours" (3)
+      it("Voting_03-Voting_03-Transitions : 4-3 : Transition forbidden : Should not go to state 'StartVotingSession'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateStartVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'ProposalsRegistrationEnded' state. -- Reason given: Not in 'ProposalsRegistrationEnded' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_04_VotingSessionEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+      
+      // Vérification de transition interdite de "Vote terminé" (4) à "Vote terminé" (4)
+      it("Voting_03-Voting_03-Transitions : 4-4 : Transition forbidden : Should not go to state 'VotingSessionEnded'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateEndVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'VotingSessionStarted' state. -- Reason given: Not in 'VotingSessionStarted' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_04_VotingSessionEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // ***************************************************************************************
+      // Passage de "Fermeture des votes" (4) à "Décomptage des votes effectué" (5)
+      // ***************************************************************************************
+      it("Voting_03-Voting_03-Transitions : 4-9 : Should transition to 'VotesTallied'", async () =>
       {
         await this.contract_Voting_03_Instance.countAndTallyVotes( {from: account_00_initial_owner_contract_Voting_03 } )
         currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
-        expectedStatus = new BN( WorkflowStatus_VotesTallied );
+        expectedStatus = new BN( WorkflowStatus_05_VotesTallied );
         expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
       });
 
+      // Vérification de transition interdite de "Décomptage des votes effectué" (5) à "Ouverture d'enregistrement des Propositions" (1)
+      it("Voting_03-Voting_03-Transitions : 5-1 : Transition forbidden : Already in 'ProposalsRegistration'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateStartProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'RegisteringVoters' state. -- Reason given: Not in 'RegisteringVoters' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_05_VotesTallied );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // Vérification de transition interdite de "Décomptage des votes effectué" (5) à "Fin d'enregistrement des propositions" (2)
+      it("Voting_03-Voting_03-Transitions : 5-2 : Transition forbidden : Should not go to state 'ProposalsRegistrationEnded'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateEndProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'ProposalsRegistrationStarted' state. -- Reason given: Not in 'ProposalsRegistrationStarted' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_05_VotesTallied );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // Vérification de transition interdite de "Décomptage des votes effectué" (5) à "Vote en cours" (3)
+      it("Voting_03-Voting_03-Transitions : 5-3 : Transition forbidden : Should not go to state 'StartVotingSession'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateStartVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'ProposalsRegistrationEnded' state. -- Reason given: Not in 'ProposalsRegistrationEnded' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_05_VotesTallied );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
       
+      // Vérification de transition interdite de "Décomptage des votes effectué" (5) à "Fin des votes" (4)
+      it("Voting_03-Voting_03-Transitions : 5-4 : Transition forbidden : Should not go to state 'VotingSessionEnded'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateEndVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'VotingSessionStarted' state. -- Reason given: Not in 'VotingSessionStarted' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_05_VotesTallied );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // Vérification de transition interdite de "Décomptage des votes effectué" (5) à Décomptage des votes effectué" (5)
+      it("Voting_03-Voting_03-Transitions : 5-4 : Transition forbidden : Should not go to state 'VotingSessionEnded'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.countAndTallyVotes( {from: account_00_initial_owner_contract_Voting_03 } )
+          , "Not in 'VotingSessionEnded' state. -- Reason given: Not in 'VotingSessionEnded' state.." 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_05_VotesTallied );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
 
 
     }); // Contract 'Voting_03-Voting_03-Transitions'
@@ -326,10 +626,126 @@ describe('Serie 01 - 03 : Voting_03-Voting_03', function()
   }); // Serie 01 - 03 - 01 : Voting_03-Voting_03-Transitions : Transitions
 
 
+
+
+
+
   // --------------------
   // Fonctionnement
   // --------------------
-  describe('Serie 01 - 03 - 02 : Voting_03-Voting_03-Fonctionnement : Fonctionnement', function()
+  describe('Serie 01 - 03 - 02 : Voting_03-Voting_03-Transitions-CheckAdminOnly : Transitions Admin checks', function()
+  {
+    contract('Voting_03 Voting_03-Transitions-CheckAdminOnly', function (accounts)
+    {
+       const account_00 = accounts[0];
+       const account_01 = accounts[1];
+       const account_02 = accounts[2];
+       const account_03 = accounts[3];
+       const account_04 = accounts[4];
+       const account_05 = accounts[5];
+       const account_00_initial_owner_contract_Voting_03 = account_00;
+
+       before(async () =>
+       {
+       this.contract_Voting_03_Instance = await Voting_03.new( {from: account_00_initial_owner_contract_Voting_03} );
+       });
+     /*
+       beforeEach(async () =>
+       {
+         this.ERC20Instance = await ERC20.new(_initialsupply,{from: owner});
+       });
+     */
+
+      // Etat initial
+      it("Voting_03-Voting_03-Transitions-CheckAdminOnly : 00 : Initial state should be 'registering voters'", async () =>
+      {
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_00_RegisteringVoters );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // ***************************************************************************************
+      // Passage de "Enregistrement des votants" (0) à "Ouverture d'enregistrement des Propositions" (1)
+      // ***************************************************************************************
+      it("Voting_03-Voting_03-Transitions : 5-4 : Transition forbidden : Should not go to state 'StartProposalsRegistration'", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.setStateStartProposalsRegistration( {from: account_01 } )
+          , "revert Ownable: caller is not the owner" 
+        );
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_00_RegisteringVoters );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      it("Voting_03-Voting_03-Transitions-CheckAdminOnly : 0-1 : Should transition to 'ProposalsRegistrationStarted'", async () =>
+      {
+        await this.contract_Voting_03_Instance.setStateStartProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_01_ProposalsRegistrationStarted );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+    
+      });
+      // ***************************************************************************************
+      // Passage de "Ouverture d'enregistrement des Propositions" (1) à "Fin d'enregistrement des propositions" (2)
+      // ***************************************************************************************
+      it("Voting_03-Voting_03-Transitions-CheckAdminOnly : 1-9 : Should transition to 'ProposalsRegistration'", async () =>
+      {
+        await this.contract_Voting_03_Instance.setStateEndProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_02_ProposalsRegistrationEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // ***************************************************************************************
+      // Passage de "Fin d'enregistrement des propositions" (2) à "Ouverture des votes" (3)
+      // ***************************************************************************************
+      it("Voting_03-Voting_03-Transitions-CheckAdminOnly : 2-9 : Should transition to 'StartVotingSession'", async () =>
+      {
+        await this.contract_Voting_03_Instance.setStateStartVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_03_VotingSessionStarted );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // ***************************************************************************************
+      // Passage de "Session de vote en cours" (3) à "Fermeture des votes" (4)
+      // ***************************************************************************************
+      it("Voting_03-Voting_03-Transitions-CheckAdminOnly : 3-9 : Should transition to 'EndVotingSession'", async () =>
+      {
+        await this.contract_Voting_03_Instance.setStateEndVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_04_VotingSessionEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // ***************************************************************************************
+      // Passage de "Fermeture des votes" (4) à "Décomptage des votes effectué" (5)
+      // ***************************************************************************************
+      it("Voting_03-Voting_03-Transitions-CheckAdminOnly : 4-9 : Should transition to 'VotesTallied'", async () =>
+      {
+        await this.contract_Voting_03_Instance.countAndTallyVotes( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_05_VotesTallied );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+   
+     }); // contract Voting_03'
+
+  }); // Serie 01 - 03 - 02 : Voting_03-Voting_03-2 : Transitions
+
+
+
+
+
+
+
+
+  // --------------------
+  // Fonctionnement
+  // --------------------
+  describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Fonctionnement : Fonctionnement', function()
   {
     contract('Voting_03 Fonctionnement', function (accounts)
     {
@@ -394,7 +810,7 @@ describe('Serie 01 - 03 : Voting_03-Voting_03', function()
    
      }); // contract Voting_03'
 
-  }); // Serie 01 - 03 - 02 : Voting_03-Voting_03-X : Fonctionnement
+  }); // Serie 01 - 03 - 02 : Voting_03-Voting_03-3 : Fonctionnement
 
 }); // Serie 01 - 03 : Voting
     
