@@ -970,7 +970,10 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
        const account_03 = accounts[3];
        const account_04 = accounts[4];
        const account_05 = accounts[5];
+       const account_06 = accounts[6];
        const account_00_initial_owner_contract_Voting_03 = account_00;
+       const account_05_not_whitelisted = account_05;
+       const account_06_whitelisted_but_not_voting = account_06;
 
        const account_01_proposal_01_description = "account_01's first proposal"
        const account_02_proposal_02_description = "account_02 proposal"
@@ -1021,10 +1024,18 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
          expect( await this.contract_Voting_03_Instance.isWhitelisted( account_04 ) ).to.be.true;
        });
 
+       // Ne pas whitelister account 05
+
+       it("Voting_03-Voting_03-Fonctionnement : 0.5 : Whitelist account 06", async () =>
+       {
+         await this.contract_Voting_03_Instance.whitelist( account_06_whitelisted_but_not_voting, {from: account_00_initial_owner_contract_Voting_03} );
+         expect( await this.contract_Voting_03_Instance.isWhitelisted( account_06_whitelisted_but_not_voting ) ).to.be.true;
+       });
+
        it("Voting_03-Voting_03-Fonctionnement : 0.5 : Accounts addresses 01-04 should be whitelisted", async () =>
        {
-         res = await this.contract_Voting_03_Instance.getWhiteListedAddresses(  {from: account_05 } );
-         expectedRes = [ account_01, account_02, account_03, account_04 ];
+         res = await this.contract_Voting_03_Instance.getWhiteListedAddresses(  {from: account_05_not_whitelisted } );
+         expectedRes = [ account_01, account_02, account_03, account_04, account_06_whitelisted_but_not_voting ];
          // console.log(res);
          // console.log(expectedRes);
          expect( res ).to.have.members( expectedRes ) ;
@@ -1115,76 +1126,200 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
         expect( parseInt(proposal_votesCount,10) ).to.be.equal(0)
         expect(proposal_proposingAddress).to.be.equal(account_01)
        });
-       
+
+      // ***************************************************************************************
+      // Passage de "Ouverture d'enregistrement des Propositions" (1) à "Fin d'enregistrement des propositions" (2)
+      // ***************************************************************************************
+      it("Voting_03-Voting_03-Fonctionnement : 1-2 : Should transition to 'End Proposals Registration'", async () =>
+      {
+        await this.contract_Voting_03_Instance.setStateEndProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_02_ProposalsRegistrationEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      it("Voting_03-Voting_03-Fonctionnement : 2.0 : Proposals registration ended ; Registering a proposal should fail", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.registerProposal( account_01_proposal_05_description, {from: account_01 } )
+          , "revert Not in 'ProposalsRegistrationStarted' state. -- Reason given: Not in 'ProposalsRegistrationStarted' state.." 
+        );
+      });
+
+      it("Voting_03-Voting_03-Fonctionnement : 2.1 : Proposals registration ended ; Check All proposals", async () =>
+      {
+        proposals = await this.contract_Voting_03_Instance.getAllProposals();
+
+        proposals.forEach( (proposal,idx) => {
+          let proposal_description = proposal[0]
+          let proposal_votesCount = proposal[1]
+          let proposal_proposingAddress = proposal[2]
+
+          expect(proposal_description).to.be.equal( proposalsDescriptions[idx] )
+          expect( parseInt(proposal_votesCount,10) ).to.be.equal(0)
+          expect(proposal_proposingAddress).to.be.equal( proposalsAccounts[idx] )
+        })
+      }); //
+
+      it("Voting_03-Voting_03-Fonctionnement : 2.2 : Proposals registration ended ; Attempting to vote should fail", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.vote( 0, {from: account_01 } )
+          , "revert Not in 'VotingSessionStarted' state. -- Reason given: Not in 'VotingSessionStarted' state.." 
+        );
+      });
+
+      // ***************************************************************************************
+      // Passage de "Fin d'enregistrement des propositions" (2) à "Ouverture des votes" (3)
+      // ***************************************************************************************
+
+      it("Voting_03-Voting_03-Fonctionnement : 2-3 : Should transition to 'StartVotingSession'", async () =>
+      {
+        await this.contract_Voting_03_Instance.setStateStartVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_03_VotingSessionStarted );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // tester un id de proposition de vote inexistant : 5
+      it("Voting_03-Voting_03-Fonctionnement : 3.0 : Vote started ; Voting for an unknown proposal should revert", async () =>
+      {
+        let proposals = await this.contract_Voting_03_Instance.getAllProposals()
+        //console.log("proposals.length="+proposals.length)
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.vote( proposals.length, {from: account_01 } )
+          , "invalid opcode" 
+        );
+      });
+
+      // Personne ne vote pour la proposition id 0
+
+      // Account 02 : vote pour proposition id 1
+      it("Voting_03-Voting_03-Fonctionnement : 3.1 : Vote started ; account 01 vote for his second proposal", async () =>
+      {
+        const voteForProposalId = 1;
+        await this.contract_Voting_03_Instance.vote( voteForProposalId, {from: account_02 } )
+
+        let hasVotedResponse = await this.contract_Voting_03_Instance.hasVoted( account_02, { from: account_05_not_whitelisted } )
+        let hasVoted = hasVotedResponse[0]
+        let votedProposal = hasVotedResponse[1]
+
+        expect(hasVoted).to.be.true;
+        expect( parseInt(votedProposal,10) ).to.be.equal(voteForProposalId);
+      });
+
+      // Account 03 : vote pour proposition id 2
+      it("Voting_03-Voting_03-Fonctionnement : 3.2 : Vote started ; account 01 vote for ", async () =>
+      {
+        const voteForProposalId = 2;
+        await this.contract_Voting_03_Instance.vote( voteForProposalId, {from: account_03 } )
+
+        let hasVotedResponse = await this.contract_Voting_03_Instance.hasVoted( account_03, { from: account_05_not_whitelisted } )
+        let hasVoted = hasVotedResponse[0]
+        let votedProposal = hasVotedResponse[1]
+
+        expect(hasVoted).to.be.true;
+        expect( parseInt(votedProposal,10) ).to.be.equal(voteForProposalId);
+      });
+
+      // Account 01 : vote pour proposition id 4
+      it("Voting_03-Voting_03-Fonctionnement : 3.3 : Vote started ; account 01 vote for account 01 second proposal", async () =>
+      {
+        const voteForProposalId = 4;
+        await this.contract_Voting_03_Instance.vote( 4, {from: account_01 } )
+
+        let hasVotedResponse = await this.contract_Voting_03_Instance.hasVoted( account_01, { from: account_05_not_whitelisted } )
+        let hasVoted = hasVotedResponse[0]
+        let votedProposal = hasVotedResponse[1]
+
+        expect(hasVoted).to.be.true;
+        expect( parseInt(votedProposal,10) ).to.be.equal(voteForProposalId);
+      });
+
+      // Account 04 : vote pour proposition id 4
+      it("Voting_03-Voting_03-Fonctionnement : 3.4 : Vote started ; account 04 vote for account 01 second proposal", async () =>
+      {
+        const voteForProposalId = 4;
+        await this.contract_Voting_03_Instance.vote( 4, {from: account_04 } )
+
+        let hasVotedResponse = await this.contract_Voting_03_Instance.hasVoted( account_04, { from: account_05_not_whitelisted } )
+        let hasVoted = hasVotedResponse[0]
+        let votedProposal = hasVotedResponse[1]
+
+        expect(hasVoted).to.be.true;
+        expect( parseInt(votedProposal,10) ).to.be.equal(voteForProposalId);
+      });
+
+      // Account 01 : tester un second vote
+      it("Voting_03-Voting_03-Fonctionnement : 3.5 : Vote started ; Account 01 attempts to voting twice : should REVERT", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.vote( 0, {from: account_01 } )
+          , "Already voted. -- Reason given: Already voted.." 
+        );
+
+        const voteForProposalId = 4;
+        let hasVotedResponse = await this.contract_Voting_03_Instance.hasVoted( account_01, { from: account_05_not_whitelisted } )
+        let hasVoted = hasVotedResponse[0]
+        let votedProposal = hasVotedResponse[1]
+
+        expect(hasVoted).to.be.true;
+        expect( parseInt(votedProposal,10) ).to.be.equal(voteForProposalId);
 
 
+      });
 
+      // ***************************************************************************************
+      // Passage de "Session de vote en cours" (3) à "Fermeture des votes" (4)
+      // ***************************************************************************************
 
+      it("Voting_03-Voting_03-Fonctionnement : 3-4 : Should transition to 'Voting Session End'", async () =>
+      {
+        await this.contract_Voting_03_Instance.setStateEndVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_04_VotingSessionEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });      
 
+      // Account 06 : tester un vote une fois la session terminée
+      it("Voting_03-Voting_03-Fonctionnement : 4.0 : Vote done ; Account 06 attempts to After session ended : should REVERT", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.vote( 0, {from: account_06 } )
+          , "Not in 'VotingSessionStarted' state. -- Reason given: Not in 'VotingSessionStarted' state.." 
+        );
+        expect(true).to.be.true;
+      });
 
+      it("Voting_03-Voting_03-Fonctionnement : 4.1 : Vote done ; Owner count votes", async () =>
+      {
+        let winningProposalId = await this.contract_Voting_03_Instance.countVotes( {from: account_00_initial_owner_contract_Voting_03 } )
+        //console.log("winningProposalId="+winningProposalId)
+        expect( parseInt(winningProposalId,10) ).to.be.equal( 4 );
 
+        expect(true).to.be.true;
+      });
 
+      it("Voting_03-Voting_03-Fonctionnement : 4.1 : Vote done ; Only Owner count votes : account 06 should revert", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.countVotes( {from: account_06 } )
+          , "Ownable: caller is not the owner" 
+        );
+        
+        expect(true).to.be.true;
+      });
+      // View : countVotes
 
+      // Write : countAndTallyVotes
 
-    // ***************************************************************************************
-    // Passage de "Ouverture d'enregistrement des Propositions" (1) à "Fin d'enregistrement des propositions" (2)
-    // ***************************************************************************************
-    it("Voting_03-Voting_03-Transitions-CheckAdminOnly-Whitelisted : 1-2 : Should transition to 'ProposalsRegistration'", async () =>
-    {
-      await this.contract_Voting_03_Instance.setStateEndProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
-      currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
-      expectedStatus = new BN( WorkflowStatus_02_ProposalsRegistrationEnded );
-      expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
-    });
-
-
-
-    it("Voting_03-Voting_03-Fonctionnement : 2.0 : Check proposals", async () =>
-    {
-      proposals = await this.contract_Voting_03_Instance.getAllProposals();
-
-      proposals.forEach( (proposal,idx) => {
-        let proposal_description = proposal[0]
-        let proposal_votesCount = proposal[1]
-        let proposal_proposingAddress = proposal[2]
-
-        expect(proposal_description).to.be.equal( proposalsDescriptions[idx] )
-        expect( parseInt(proposal_votesCount,10) ).to.be.equal(0)
-        expect(proposal_proposingAddress).to.be.equal( proposalsAccounts[idx] )
-      })
-    }); //
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // ***************************************************************************************
-    // Passage de "Fin d'enregistrement des propositions" (2) à "Ouverture des votes" (3)
-    // ***************************************************************************************
-
-    it("Voting_03-Voting_03-Fonctionnement : 2-3 : Should transition to 'StartVotingSession'", async () =>
-    {
-      await this.contract_Voting_03_Instance.setStateStartVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
-      currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
-      expectedStatus = new BN( WorkflowStatus_03_VotingSessionStarted );
-      expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
-    });
-
-
-
-
-     }); // contract Voting_03'
+    }); // contract Voting_03-Voting_03-Fonctionnement
 
   }); // Serie 01 - 03 - 04 : Voting_03-Voting_03-Fonctionnement : Fonctionnement
 

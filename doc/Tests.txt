@@ -5,6 +5,7 @@ truffle test .\test\erc20.test.js --compile-none
 
 truffle test .\test\Voting.test.js --compile-none
 
+Pass TOUS les tests
 truffle test .\test\Voting.test.js -g "Voting_03" --compile-none 
 truffle test .\test\Voting.test.js -g "Voting_03-Ownable" --compile-none 
 truffle test .\test\Voting.test.js -g "Voting_03-Admin" --compile-none

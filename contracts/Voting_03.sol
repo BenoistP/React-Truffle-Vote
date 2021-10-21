@@ -151,7 +151,6 @@ contract Voting_03 is Admin_WL_03
          _;
      } // modifier hasNotAlreadyVoted
 
-
     // Notify events
     /*
     modifier workflowStatusChanged(WorkflowStatus previousStatus, WorkflowStatus newStatus)
