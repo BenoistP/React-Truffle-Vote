@@ -42,6 +42,7 @@ module.exports = {
         port: 7545, // le port rpc de notre réseau ganache 
         network_id: "3333",// le network id de notre réseau ganache 
      }
+/*
    ,
     ropsten:
     {
@@ -55,7 +56,7 @@ module.exports = {
        timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
        skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
        }
-//*/
+*/
 } // networks
 
 };

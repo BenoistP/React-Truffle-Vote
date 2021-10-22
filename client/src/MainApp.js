@@ -128,7 +128,7 @@ class MainApp extends Component
                     <div className="container ">
                     
                        { this.state.connectedAccountAddr === this.state.owner &&
-                         <AdminTranslated owner={this.state.owner} whitelistedAddresses={whitelistedAddresses} handleWhitelistNewAddress={this.whitelistNewAddress} connectedAccountAddr={this.state.connectedAccountAddr} workflowStatus={workflowStatus}/>
+                    <AdminTranslated owner={this.state.owner} whitelistedAddresses={whitelistedAddresses} handleWhitelistNewAddress={this.whitelistNewAddress} connectedAccountAddr={this.state.connectedAccountAddr} workflowStatus={workflowStatus}/>
                        }
                     </div>
 
@@ -254,6 +254,8 @@ componentDidMount = async () => {
     // Get network provider and web3 instance.
     const web3 = await getWeb3();
 
+    const { whitelistedAddresses } = this.state;
+
     // Use web3 to get the user's accounts.
     const connectedAccountsAddrs = await web3.eth.getAccounts();
     const connectedAccountAddr = toChecksumAddress(connectedAccountsAddrs[0])
@@ -267,13 +269,100 @@ componentDidMount = async () => {
       contractVoting_deployedNetwork && contractVoting_deployedNetwork.address,
     );
 
-    this.setState({ web3, connectedAccountAddr, contractVoting: contractInstanceVoting, ethereum: window.ethereum }, this.runInit );
+    this.setState( { web3, connectedAccountAddr, contractVoting: contractInstanceVoting, ethereum: window.ethereum }, this.runInit );
 
     // Mise en place du handler pour l'évènement -> changement de compte
     window.ethereum.on("accountsChanged", accounts =>
      {
       this.handleAccountsChangedEvent(accounts)
-      });
+     });
+
+    // Mise en place du handler pour les évènements du contrat
+    // https://web3js.readthedocs.io/en/v1.2.0/web3-eth-contract.html#events-allevents
+    var contractInstanceVotingEvents = contractInstanceVoting.events.allEvents
+     (
+      { fromBlock: 'latest' },
+      (error, result) =>
+        {
+          if (error)
+          {
+           console.error("contractInstanceVotingEvents:error:"+error)
+          }
+         else
+          {
+           console.log("contractInstanceVotingEvents:result:"+result)
+
+          }
+        }
+     );
+
+     contractInstanceVotingEvents.on('data', event =>{
+        console.log("contractInstanceVotingEvents.on:data:event="+event)
+
+        if (event.event === "Whitelisted")
+          {
+            let whitelistedAddress = event.returnValues._address
+            alert( "Whitelisted:" +  whitelistedAddress)
+
+            whitelistedAddresses.push( whitelistedAddress )
+            this.setState({ whitelistedAddresses });
+          }
+       }
+     )
+
+
+    /*
+    contractInstanceVoting.monEvenement.watch((err, result) => {
+      if (err)
+       {
+        console.log('could not get event Won()')
+       }
+      else
+       {
+        console.log('could not get event Won()')
+          this.winEvent = result.args
+          this.pending = false
+       }
+      }) // watch
+      */
+       /*
+      events.watch(function(error, result)
+       {
+        if (!error)
+          {
+            console.log(result.event)
+            // if(['EventName1', 'EventName2'].includes(result.event))
+            //  {
+             //do
+            //  }
+          
+          }
+        else
+         {
+          // Faire une popup
+         }
+       }); // events.watch
+
+myContract.events.MyEvent({
+    filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
+    fromBlock: 0
+}, function(error, event){ console.log(event); })
+.on('data', function(event){
+    console.log(event); // same results as the optional callback above
+})
+.on('changed', function(event){
+    // remove event from local database
+})
+.on('error', console.error);
+
+        var event1 = contract.events.EventName1({from: address});
+        var event2 = contract.events.EventName2({from: address});
+        event1.watch(myCallback);
+        event2.watch(myCallback);
+
+        function myCallback(err, result) {
+        }
+       */
 
    }
   catch (error)

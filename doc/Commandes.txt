@@ -6,3 +6,5 @@ Commands:
   Test dapp:            cd client && npm test
   Run dev server:       cd client && npm run start
   Build for production: cd client && npm run build
+
+  truffle migrate --network devlocal --reset

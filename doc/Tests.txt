@@ -22,3 +22,5 @@ truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Fonctionnement" --com
 
 truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Fonctionnement-1" --compile-none
 truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Fonctionnement-2" --compile-none
+
+TESTER LES EVENEMENTS
