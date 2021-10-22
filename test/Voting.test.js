@@ -958,11 +958,11 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
 
 
   // --------------------
-  // Fonctionnement
+  // Fonctionnement-1
   // --------------------
-  describe('Serie 01 - 03 - 04 : Voting_03-Voting_03-Fonctionnement : Fonctionnement', function()
+  describe('Serie 01 - 03 - 04 : Voting_03-Voting_03-Fonctionnement-1 : Fonctionnement', function()
   {
-    contract('Voting_03-Voting_03-Fonctionnement', function (accounts)
+    contract('Voting_03-Voting_03-Fonctionnement-1', function (accounts)
     {
        const account_00 = accounts[0];
        const account_01 = accounts[1];
@@ -994,31 +994,31 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
          this.ERC20Instance = await ERC20.new(_initialsupply,{from: owner});
        });
      */
-       it('Voting_03-Voting_03-Fonctionnement : 0.0 : Contract is owned by account_00', async () =>
+       it('Voting_03-Voting_03-Fonctionnement-1 : 0.0 : Contract is owned by account_00', async () =>
        {
          expect( await this.contract_Voting_03_Instance.owner() ).to.equal( account_00 );
        });
 
 
-       it("Voting_03-Voting_03-Fonctionnement : 0.1 : Whitelist account 01", async () =>
+       it("Voting_03-Voting_03-Fonctionnement-1 : 0.1 : Whitelist account 01", async () =>
        {
          await this.contract_Voting_03_Instance.whitelist( account_01, {from: account_00_initial_owner_contract_Voting_03} );
          expect( await this.contract_Voting_03_Instance.isWhitelisted( account_01 ) ).to.be.true;
        });
        
-       it("Voting_03-Voting_03-Fonctionnement : 0.2 : Whitelist account 02", async () =>
+       it("Voting_03-Voting_03-Fonctionnement-1 : 0.2 : Whitelist account 02", async () =>
        {
          await this.contract_Voting_03_Instance.whitelist( account_02, {from: account_00_initial_owner_contract_Voting_03} );
          expect( await this.contract_Voting_03_Instance.isWhitelisted( account_02 ) ).to.be.true;
        });
 
-       it("Voting_03-Voting_03-Fonctionnement : 0.3 : Whitelist account 03", async () =>
+       it("Voting_03-Voting_03-Fonctionnement-1 : 0.3 : Whitelist account 03", async () =>
        {
          await this.contract_Voting_03_Instance.whitelist( account_03, {from: account_00_initial_owner_contract_Voting_03} );
          expect( await this.contract_Voting_03_Instance.isWhitelisted( account_03 ) ).to.be.true;
        });
 
-       it("Voting_03-Voting_03-Fonctionnement : 0.4 : Whitelist account 04", async () =>
+       it("Voting_03-Voting_03-Fonctionnement-1 : 0.4 : Whitelist account 04", async () =>
        {
          await this.contract_Voting_03_Instance.whitelist( account_04, {from: account_00_initial_owner_contract_Voting_03} );
          expect( await this.contract_Voting_03_Instance.isWhitelisted( account_04 ) ).to.be.true;
@@ -1026,13 +1026,13 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
 
        // Ne pas whitelister account 05
 
-       it("Voting_03-Voting_03-Fonctionnement : 0.5 : Whitelist account 06", async () =>
+       it("Voting_03-Voting_03-Fonctionnement-1 : 0.5 : Whitelist account 06", async () =>
        {
          await this.contract_Voting_03_Instance.whitelist( account_06_whitelisted_but_not_voting, {from: account_00_initial_owner_contract_Voting_03} );
          expect( await this.contract_Voting_03_Instance.isWhitelisted( account_06_whitelisted_but_not_voting ) ).to.be.true;
        });
 
-       it("Voting_03-Voting_03-Fonctionnement : 0.5 : Accounts addresses 01-04 should be whitelisted", async () =>
+       it("Voting_03-Voting_03-Fonctionnement-1 : 0.5 : Accounts addresses 01,02,03,04,06 should be whitelisted", async () =>
        {
          res = await this.contract_Voting_03_Instance.getWhiteListedAddresses(  {from: account_05_not_whitelisted } );
          expectedRes = [ account_01, account_02, account_03, account_04, account_06_whitelisted_but_not_voting ];
@@ -1041,8 +1041,13 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
          expect( res ).to.have.members( expectedRes ) ;
        });
 
+       it("Voting_03-Voting_03-Fonctionnement-1 : 0.5 : Account address 05 should NOT be whitelisted", async () =>
+       {
+         expect(await this.contract_Voting_03_Instance.isWhitelisted( account_05_not_whitelisted )).to.be.false;
+       });
+ 
        // Passage à 'Enregistrement des propositions'
-       it("Voting_03-Voting_03-Fonctionnement : 0-1 : Should transition to 'ProposalsRegistration'", async () =>
+       it("Voting_03-Voting_03-Fonctionnement-1 : 0-1 : Should transition to 'ProposalsRegistration'", async () =>
        {
          await this.contract_Voting_03_Instance.setStateStartProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
          currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
@@ -1052,7 +1057,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
 
        // Propositions
 
-       it("Voting_03-Voting_03-Fonctionnement : 1.1 : Register account_01 first proposal", async () =>
+       it("Voting_03-Voting_03-Fonctionnement-1 : 1.1 : Register account_01 first proposal", async () =>
        {
          await this.contract_Voting_03_Instance.registerProposal( account_01_proposal_01_description, {from: account_01 } )
 
@@ -1067,7 +1072,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
         expect(proposal_proposingAddress).to.be.equal(account_01)
        });
        
-       it("Voting_03-Voting_03-Fonctionnement : 1.2 : Register account_02 proposal", async () =>
+       it("Voting_03-Voting_03-Fonctionnement-1 : 1.2 : Register account_02 proposal", async () =>
        {
          await this.contract_Voting_03_Instance.registerProposal( account_02_proposal_02_description, {from: account_02 } )
 
@@ -1082,7 +1087,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
         expect(proposal_proposingAddress).to.be.equal(account_02)
        });
        
-       it("Voting_03-Voting_03-Fonctionnement : 1.3 : Register account_03 proposal", async () =>
+       it("Voting_03-Voting_03-Fonctionnement-1 : 1.3 : Register account_03 proposal", async () =>
        {
          await this.contract_Voting_03_Instance.registerProposal( account_03_proposal_03_description, {from: account_03 } )
 
@@ -1097,7 +1102,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
         expect(proposal_proposingAddress).to.be.equal(account_03)
        });
 
-       it("Voting_03-Voting_03-Fonctionnement : 1.4 : Register account_04 proposal", async () =>
+       it("Voting_03-Voting_03-Fonctionnement-1 : 1.4 : Register account_04 proposal", async () =>
        {
          await this.contract_Voting_03_Instance.registerProposal( account_04_proposal_04_description, {from: account_04 } )
 
@@ -1112,7 +1117,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
         expect(proposal_proposingAddress).to.be.equal(account_04)
        });
 
-       it("Voting_03-Voting_03-Fonctionnement : 1.1 : Register account_01 second proposal", async () =>
+       it("Voting_03-Voting_03-Fonctionnement-1 : 1.1 : Register account_01 second proposal", async () =>
        {
          await this.contract_Voting_03_Instance.registerProposal( account_01_proposal_05_description, {from: account_01 } )
 
@@ -1130,7 +1135,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
       // ***************************************************************************************
       // Passage de "Ouverture d'enregistrement des Propositions" (1) à "Fin d'enregistrement des propositions" (2)
       // ***************************************************************************************
-      it("Voting_03-Voting_03-Fonctionnement : 1-2 : Should transition to 'End Proposals Registration'", async () =>
+      it("Voting_03-Voting_03-Fonctionnement-1 : 1-2 : Should transition to 'End Proposals Registration'", async () =>
       {
         await this.contract_Voting_03_Instance.setStateEndProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
         currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
@@ -1138,7 +1143,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
         expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
       });
 
-      it("Voting_03-Voting_03-Fonctionnement : 2.0 : Proposals registration ended ; Registering a proposal should fail", async () =>
+      it("Voting_03-Voting_03-Fonctionnement-1 : 2.0 : Proposals registration ended ; Registering a proposal should fail", async () =>
       {
         await expectRevert
         (
@@ -1147,7 +1152,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
         );
       });
 
-      it("Voting_03-Voting_03-Fonctionnement : 2.1 : Proposals registration ended ; Check All proposals", async () =>
+      it("Voting_03-Voting_03-Fonctionnement-1 : 2.1 : Proposals registration ended ; Check All proposals", async () =>
       {
         proposals = await this.contract_Voting_03_Instance.getAllProposals();
 
@@ -1162,7 +1167,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
         })
       }); //
 
-      it("Voting_03-Voting_03-Fonctionnement : 2.2 : Proposals registration ended ; Attempting to vote should fail", async () =>
+      it("Voting_03-Voting_03-Fonctionnement-1 : 2.2 : Proposals registration ended ; Attempting to vote should fail", async () =>
       {
         await expectRevert
         (
@@ -1175,7 +1180,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
       // Passage de "Fin d'enregistrement des propositions" (2) à "Ouverture des votes" (3)
       // ***************************************************************************************
 
-      it("Voting_03-Voting_03-Fonctionnement : 2-3 : Should transition to 'StartVotingSession'", async () =>
+      it("Voting_03-Voting_03-Fonctionnement-1 : 2-3 : Should transition to 'StartVotingSession'", async () =>
       {
         await this.contract_Voting_03_Instance.setStateStartVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
         currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
@@ -1184,7 +1189,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
       });
 
       // tester un id de proposition de vote inexistant : 5
-      it("Voting_03-Voting_03-Fonctionnement : 3.0 : Vote started ; Voting for an unknown proposal should revert", async () =>
+      it("Voting_03-Voting_03-Fonctionnement-1 : 3.0 : Vote started ; Voting for an unknown proposal should revert", async () =>
       {
         let proposals = await this.contract_Voting_03_Instance.getAllProposals()
         //console.log("proposals.length="+proposals.length)
@@ -1198,7 +1203,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
       // Personne ne vote pour la proposition id 0
 
       // Account 02 : vote pour proposition id 1
-      it("Voting_03-Voting_03-Fonctionnement : 3.1 : Vote started ; account 01 vote for his second proposal", async () =>
+      it("Voting_03-Voting_03-Fonctionnement-1 : 3.1 : Vote started ; account 02 vote for proposal 01", async () =>
       {
         const voteForProposalId = 1;
         await this.contract_Voting_03_Instance.vote( voteForProposalId, {from: account_02 } )
@@ -1212,7 +1217,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
       });
 
       // Account 03 : vote pour proposition id 2
-      it("Voting_03-Voting_03-Fonctionnement : 3.2 : Vote started ; account 01 vote for ", async () =>
+      it("Voting_03-Voting_03-Fonctionnement-1 : 3.2 : Vote started ; account 3 vote for proposal 02", async () =>
       {
         const voteForProposalId = 2;
         await this.contract_Voting_03_Instance.vote( voteForProposalId, {from: account_03 } )
@@ -1226,10 +1231,10 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
       });
 
       // Account 01 : vote pour proposition id 4
-      it("Voting_03-Voting_03-Fonctionnement : 3.3 : Vote started ; account 01 vote for account 01 second proposal", async () =>
+      it("Voting_03-Voting_03-Fonctionnement-1 : 3.3 : Vote started ; account 01 vote for proposal 04", async () =>
       {
         const voteForProposalId = 4;
-        await this.contract_Voting_03_Instance.vote( 4, {from: account_01 } )
+        await this.contract_Voting_03_Instance.vote( voteForProposalId, {from: account_01 } )
 
         let hasVotedResponse = await this.contract_Voting_03_Instance.hasVoted( account_01, { from: account_05_not_whitelisted } )
         let hasVoted = hasVotedResponse[0]
@@ -1240,10 +1245,10 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
       });
 
       // Account 04 : vote pour proposition id 4
-      it("Voting_03-Voting_03-Fonctionnement : 3.4 : Vote started ; account 04 vote for account 01 second proposal", async () =>
+      it("Voting_03-Voting_03-Fonctionnement-1 : 3.4 : Vote started ; account 04 vote for proposal 04", async () =>
       {
         const voteForProposalId = 4;
-        await this.contract_Voting_03_Instance.vote( 4, {from: account_04 } )
+        await this.contract_Voting_03_Instance.vote( voteForProposalId, {from: account_04 } )
 
         let hasVotedResponse = await this.contract_Voting_03_Instance.hasVoted( account_04, { from: account_05_not_whitelisted } )
         let hasVoted = hasVotedResponse[0]
@@ -1254,7 +1259,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
       });
 
       // Account 01 : tester un second vote
-      it("Voting_03-Voting_03-Fonctionnement : 3.5 : Vote started ; Account 01 attempts to voting twice : should REVERT", async () =>
+      it("Voting_03-Voting_03-Fonctionnement-1 : 3.5 : Vote started ; Account 01 attempts to voting twice : should REVERT", async () =>
       {
         await expectRevert
         (
@@ -1277,7 +1282,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
       // Passage de "Session de vote en cours" (3) à "Fermeture des votes" (4)
       // ***************************************************************************************
 
-      it("Voting_03-Voting_03-Fonctionnement : 3-4 : Should transition to 'Voting Session End'", async () =>
+      it("Voting_03-Voting_03-Fonctionnement-1 : 3-4 : Should transition to 'Voting Session End'", async () =>
       {
         await this.contract_Voting_03_Instance.setStateEndVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
         currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
@@ -1286,7 +1291,7 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
       });      
 
       // Account 06 : tester un vote une fois la session terminée
-      it("Voting_03-Voting_03-Fonctionnement : 4.0 : Vote done ; Account 06 attempts to After session ended : should REVERT", async () =>
+      it("Voting_03-Voting_03-Fonctionnement-1 : 4.0 : Vote done ; Account 06 attempts to After session ended : should REVERT", async () =>
       {
         await expectRevert
         (
@@ -1296,16 +1301,14 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
         expect(true).to.be.true;
       });
 
-      it("Voting_03-Voting_03-Fonctionnement : 4.1 : Vote done ; Owner count votes", async () =>
+      it("Voting_03-Voting_03-Fonctionnement-1 : 4.1 : Vote done ; Owner count votes", async () =>
       {
         let winningProposalId = await this.contract_Voting_03_Instance.countVotes( {from: account_00_initial_owner_contract_Voting_03 } )
         //console.log("winningProposalId="+winningProposalId)
         expect( parseInt(winningProposalId,10) ).to.be.equal( 4 );
-
-        expect(true).to.be.true;
       });
 
-      it("Voting_03-Voting_03-Fonctionnement : 4.1 : Vote done ; Only Owner count votes : account 06 should revert", async () =>
+      it("Voting_03-Voting_03-Fonctionnement-1 : 4.1 : Vote done ; Only Owner count votes : account 06 should revert", async () =>
       {
         await expectRevert
         (
@@ -1313,15 +1316,393 @@ describe('Serie 01 - 03 - 03 : Voting_03-Voting_03-Transitions-CheckAdminOnly-Wh
           , "Ownable: caller is not the owner" 
         );
         
-        expect(true).to.be.true;
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_04_VotingSessionEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+
       });
       // View : countVotes
 
       // Write : countAndTallyVotes
 
-    }); // contract Voting_03-Voting_03-Fonctionnement
+    }); // contract Voting_03-Voting_03-Fonctionnement-1
 
-  }); // Serie 01 - 03 - 04 : Voting_03-Voting_03-Fonctionnement : Fonctionnement
+  }); // Serie 01 - 03 - 04 : Voting_03-Voting_03-Fonctionnement-1 : Fonctionnement
+
+
+  // --------------------
+  // Fonctionnement-2
+  // --------------------
+
+  describe('Serie 01 - 03 - 04 : Voting_03-Voting_03-Fonctionnement-2 : Fonctionnement', function()
+  {
+
+    contract('Voting_03-Voting_03-Fonctionnement-2', function (accounts)
+    {
+       const account_00 = accounts[0];
+       const account_01 = accounts[1];
+       const account_02 = accounts[2];
+       const account_03 = accounts[3];
+       const account_04 = accounts[4];
+       const account_05 = accounts[5];
+       const account_06 = accounts[6];
+       const account_00_initial_owner_contract_Voting_03 = account_00;
+       const account_05_not_whitelisted = account_05;
+       const account_06_whitelisted_but_not_voting = account_06;
+
+       const account_01_proposal_01_description = "account_01's first proposal"
+       const account_02_proposal_02_description = "account_02 proposal"
+       const account_03_proposal_03_description = "account_03 proposal"
+       const account_04_proposal_04_description = "account_04 proposal"
+       const account_01_proposal_05_description = "account_01's second proposal"
+
+       const proposalsDescriptions = [account_01_proposal_01_description, account_02_proposal_02_description, account_03_proposal_03_description, account_04_proposal_04_description, account_01_proposal_05_description]
+       const proposalsAccounts = [ account_01, account_02, account_03, account_04, account_01 ]
+
+       before(async () =>
+       {
+        this.contract_Voting_03_Instance = await Voting_03.new( {from: account_00_initial_owner_contract_Voting_03} );
+       });
+     /*
+       beforeEach(async () =>
+       {
+         this.ERC20Instance = await ERC20.new(_initialsupply,{from: owner});
+       });
+     */
+       it('Voting_03-Voting_03-Fonctionnement-2 : 0.0 : Contract is owned by account_00', async () =>
+       {
+         expect( await this.contract_Voting_03_Instance.owner() ).to.equal( account_00 );
+       });
+
+
+       it("Voting_03-Voting_03-Fonctionnement-2 : 0.1 : Whitelist account 01", async () =>
+       {
+         await this.contract_Voting_03_Instance.whitelist( account_01, {from: account_00_initial_owner_contract_Voting_03} );
+         expect( await this.contract_Voting_03_Instance.isWhitelisted( account_01 ) ).to.be.true;
+       });
+       
+       it("Voting_03-Voting_03-Fonctionnement-2 : 0.2 : Whitelist account 02", async () =>
+       {
+         await this.contract_Voting_03_Instance.whitelist( account_02, {from: account_00_initial_owner_contract_Voting_03} );
+         expect( await this.contract_Voting_03_Instance.isWhitelisted( account_02 ) ).to.be.true;
+       });
+
+       it("Voting_03-Voting_03-Fonctionnement-2 : 0.3 : Whitelist account 03", async () =>
+       {
+         await this.contract_Voting_03_Instance.whitelist( account_03, {from: account_00_initial_owner_contract_Voting_03} );
+         expect( await this.contract_Voting_03_Instance.isWhitelisted( account_03 ) ).to.be.true;
+       });
+
+       it("Voting_03-Voting_03-Fonctionnement-2 : 0.4 : Whitelist account 04", async () =>
+       {
+         await this.contract_Voting_03_Instance.whitelist( account_04, {from: account_00_initial_owner_contract_Voting_03} );
+         expect( await this.contract_Voting_03_Instance.isWhitelisted( account_04 ) ).to.be.true;
+       });
+
+       // Ne pas whitelister account 05
+
+       it("Voting_03-Voting_03-Fonctionnement-2 : 0.5 : Whitelist account 06", async () =>
+       {
+         await this.contract_Voting_03_Instance.whitelist( account_06_whitelisted_but_not_voting, {from: account_00_initial_owner_contract_Voting_03} );
+         expect( await this.contract_Voting_03_Instance.isWhitelisted( account_06_whitelisted_but_not_voting ) ).to.be.true;
+       });
+
+       it("Voting_03-Voting_03-Fonctionnement-2 : 0.5 : Accounts addresses 01,02,03,04,06 should be whitelisted", async () =>
+       {
+         res = await this.contract_Voting_03_Instance.getWhiteListedAddresses(  {from: account_05_not_whitelisted } );
+         expectedRes = [ account_01, account_02, account_03, account_04, account_06_whitelisted_but_not_voting ];
+         // console.log(res);
+         // console.log(expectedRes);
+         expect( res ).to.have.members( expectedRes ) ;
+       });
+
+       it("Voting_03-Voting_03-Fonctionnement-2 : 0.5 : Account address 05 should NOT be whitelisted", async () =>
+       {
+         expect(await this.contract_Voting_03_Instance.isWhitelisted( account_05_not_whitelisted )).to.be.false;
+       });
+
+       // Passage à 'Enregistrement des propositions'
+       it("Voting_03-Voting_03-Fonctionnement-2 : 0-1 : Should transition to 'ProposalsRegistration'", async () =>
+       {
+         await this.contract_Voting_03_Instance.setStateStartProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+         currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+         expectedStatus = new BN( WorkflowStatus_01_ProposalsRegistrationStarted );
+         expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+       });
+
+       // Propositions
+
+       it("Voting_03-Voting_03-Fonctionnement-2 : 1.1 : Register account_01 first proposal", async () =>
+       {
+         await this.contract_Voting_03_Instance.registerProposal( account_01_proposal_01_description, {from: account_01 } )
+
+         proposals = await this.contract_Voting_03_Instance.getAllProposals();
+         let proposalIdx=0
+         let proposal_description = proposals[proposalIdx][0]
+         let proposal_votesCount = proposals[proposalIdx][1]
+         let proposal_proposingAddress = proposals[proposalIdx][2]
+
+        expect(proposal_description).to.be.equal(account_01_proposal_01_description)
+        expect( parseInt(proposal_votesCount,10) ).to.be.equal(0)
+        expect(proposal_proposingAddress).to.be.equal(account_01)
+       });
+       
+       it("Voting_03-Voting_03-Fonctionnement-2 : 1.2 : Register account_02 proposal", async () =>
+       {
+         await this.contract_Voting_03_Instance.registerProposal( account_02_proposal_02_description, {from: account_02 } )
+
+         proposals = await this.contract_Voting_03_Instance.getAllProposals();
+         let proposalIdx=1
+         let proposal_description = proposals[proposalIdx][0]
+         let proposal_votesCount = proposals[proposalIdx][1]
+         let proposal_proposingAddress = proposals[proposalIdx][2]
+
+        expect(proposal_description).to.be.equal(account_02_proposal_02_description)
+        expect( parseInt(proposal_votesCount,10) ).to.be.equal(0)
+        expect(proposal_proposingAddress).to.be.equal(account_02)
+       });
+       
+       it("Voting_03-Voting_03-Fonctionnement-2 : 1.3 : Register account_03 proposal", async () =>
+       {
+         await this.contract_Voting_03_Instance.registerProposal( account_03_proposal_03_description, {from: account_03 } )
+
+         proposals = await this.contract_Voting_03_Instance.getAllProposals();
+         let proposalIdx=2
+         let proposal_description = proposals[proposalIdx][0]
+         let proposal_votesCount = proposals[proposalIdx][1]
+         let proposal_proposingAddress = proposals[proposalIdx][2]
+
+        expect(proposal_description).to.be.equal(account_03_proposal_03_description)
+        expect( parseInt(proposal_votesCount,10) ).to.be.equal(0)
+        expect(proposal_proposingAddress).to.be.equal(account_03)
+       });
+
+       it("Voting_03-Voting_03-Fonctionnement-2 : 1.4 : Register account_04 proposal", async () =>
+       {
+         await this.contract_Voting_03_Instance.registerProposal( account_04_proposal_04_description, {from: account_04 } )
+
+         proposals = await this.contract_Voting_03_Instance.getAllProposals();
+         let proposalIdx=3
+         let proposal_description = proposals[proposalIdx][0]
+         let proposal_votesCount = proposals[proposalIdx][1]
+         let proposal_proposingAddress = proposals[proposalIdx][2]
+
+        expect(proposal_description).to.be.equal(account_04_proposal_04_description)
+        expect( parseInt(proposal_votesCount,10) ).to.be.equal(0)
+        expect(proposal_proposingAddress).to.be.equal(account_04)
+       });
+
+       it("Voting_03-Voting_03-Fonctionnement-2 : 1.1 : Register account_01 second proposal", async () =>
+       {
+         await this.contract_Voting_03_Instance.registerProposal( account_01_proposal_05_description, {from: account_01 } )
+
+         proposals = await this.contract_Voting_03_Instance.getAllProposals();
+         let proposalIdx=4
+         let proposal_description = proposals[proposalIdx][0]
+         let proposal_votesCount = proposals[proposalIdx][1]
+         let proposal_proposingAddress = proposals[proposalIdx][2]
+
+        expect(proposal_description).to.be.equal(account_01_proposal_05_description)
+        expect( parseInt(proposal_votesCount,10) ).to.be.equal(0)
+        expect(proposal_proposingAddress).to.be.equal(account_01)
+       });
+
+      // ***************************************************************************************
+      // Passage de "Ouverture d'enregistrement des Propositions" (1) à "Fin d'enregistrement des propositions" (2)
+      // ***************************************************************************************
+      it("Voting_03-Voting_03-Fonctionnement-2 : 1-2 : Should transition to 'End Proposals Registration'", async () =>
+      {
+        await this.contract_Voting_03_Instance.setStateEndProposalsRegistration( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_02_ProposalsRegistrationEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      it("Voting_03-Voting_03-Fonctionnement-2 : 2.0 : Proposals registration ended ; Registering a proposal should fail", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.registerProposal( account_01_proposal_05_description, {from: account_01 } )
+          , "revert Not in 'ProposalsRegistrationStarted' state. -- Reason given: Not in 'ProposalsRegistrationStarted' state.." 
+        );
+      });
+
+      it("Voting_03-Voting_03-Fonctionnement-2 : 2.1 : Proposals registration ended ; Check All proposals", async () =>
+      {
+        proposals = await this.contract_Voting_03_Instance.getAllProposals();
+
+        proposals.forEach( (proposal,idx) => {
+          let proposal_description = proposal[0]
+          let proposal_votesCount = proposal[1]
+          let proposal_proposingAddress = proposal[2]
+
+          expect(proposal_description).to.be.equal( proposalsDescriptions[idx] )
+          expect( parseInt(proposal_votesCount,10) ).to.be.equal(0)
+          expect(proposal_proposingAddress).to.be.equal( proposalsAccounts[idx] )
+        })
+      }); //
+
+      it("Voting_03-Voting_03-Fonctionnement-2 : 2.2 : Proposals registration ended ; Attempting to vote should fail", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.vote( 0, {from: account_01 } )
+          , "revert Not in 'VotingSessionStarted' state. -- Reason given: Not in 'VotingSessionStarted' state.." 
+        );
+      });
+
+      // ***************************************************************************************
+      // Passage de "Fin d'enregistrement des propositions" (2) à "Ouverture des votes" (3)
+      // ***************************************************************************************
+
+      it("Voting_03-Voting_03-Fonctionnement-2 : 2-3 : Should transition to 'StartVotingSession'", async () =>
+      {
+        await this.contract_Voting_03_Instance.setStateStartVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_03_VotingSessionStarted );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });
+
+      // tester un id de proposition de vote inexistant : 5
+      it("Voting_03-Voting_03-Fonctionnement-2 : 3.0 : Vote started ; Voting for an unknown proposal should revert", async () =>
+      {
+        let proposals = await this.contract_Voting_03_Instance.getAllProposals()
+        //console.log("proposals.length="+proposals.length)
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.vote( proposals.length, {from: account_01 } )
+          , "invalid opcode" 
+        );
+      });
+
+      // Tout le monde vote pour la proposition id 0
+
+      // Account 02 : vote pour proposition id 0
+      it("Voting_03-Voting_03-Fonctionnement-2 : 3.1 : Vote started ; account 02 proposal 0", async () =>
+      {
+        const voteForProposalId = 0;
+        await this.contract_Voting_03_Instance.vote( voteForProposalId, {from: account_02 } )
+
+        let hasVotedResponse = await this.contract_Voting_03_Instance.hasVoted( account_02, { from: account_05_not_whitelisted } )
+        let hasVoted = hasVotedResponse[0]
+        let votedProposal = hasVotedResponse[1]
+
+        expect(hasVoted).to.be.true;
+        expect( parseInt(votedProposal,10) ).to.be.equal(voteForProposalId);
+      });
+
+      // Account 03 : vote pour proposition id 0
+      it("Voting_03-Voting_03-Fonctionnement-2 : 3.2 : Vote started ; account 03 vote for proposal 0", async () =>
+      {
+        const voteForProposalId = 0;
+        await this.contract_Voting_03_Instance.vote( voteForProposalId, {from: account_03 } )
+
+        let hasVotedResponse = await this.contract_Voting_03_Instance.hasVoted( account_03, { from: account_05_not_whitelisted } )
+        let hasVoted = hasVotedResponse[0]
+        let votedProposal = hasVotedResponse[1]
+
+        expect(hasVoted).to.be.true;
+        expect( parseInt(votedProposal,10) ).to.be.equal(voteForProposalId);
+      });
+
+      // Account 01 : vote pour proposition id 0
+      it("Voting_03-Voting_03-Fonctionnement-2 : 3.3 : Vote started ; account 01 vote for proposal 0", async () =>
+      {
+        const voteForProposalId = 0;
+        await this.contract_Voting_03_Instance.vote( voteForProposalId, {from: account_01 } )
+
+        let hasVotedResponse = await this.contract_Voting_03_Instance.hasVoted( account_01, { from: account_05_not_whitelisted } )
+        let hasVoted = hasVotedResponse[0]
+        let votedProposal = hasVotedResponse[1]
+
+        expect(hasVoted).to.be.true;
+        expect( parseInt(votedProposal,10) ).to.be.equal(voteForProposalId);
+      });
+
+      // Account 04 : vote pour proposition id 0
+      it("Voting_03-Voting_03-Fonctionnement-2 : 3.4 : Vote started ; account 04 vote for proposal 0", async () =>
+      {
+        const voteForProposalId = 0;
+        await this.contract_Voting_03_Instance.vote( voteForProposalId, {from: account_04 } )
+
+        let hasVotedResponse = await this.contract_Voting_03_Instance.hasVoted( account_04, { from: account_05_not_whitelisted } )
+        let hasVoted = hasVotedResponse[0]
+        let votedProposal = hasVotedResponse[1]
+
+        expect(hasVoted).to.be.true;
+        expect( parseInt(votedProposal,10) ).to.be.equal(voteForProposalId);
+      });
+
+      // Account 02 : tester un second vote
+      it("Voting_03-Voting_03-Fonctionnement-2 : 3.5 : Vote started ; Account 02 attempts to voting twice : should REVERT", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.vote( 2, {from: account_02 } )
+          , "Already voted. -- Reason given: Already voted.." 
+        );
+
+        const voteForProposalId = 0;
+        let hasVotedResponse = await this.contract_Voting_03_Instance.hasVoted( account_02, { from: account_05_not_whitelisted } )
+        let hasVoted = hasVotedResponse[0]
+        let votedProposal = hasVotedResponse[1]
+
+        expect(hasVoted).to.be.true;
+        expect( parseInt(votedProposal,10) ).to.be.equal(voteForProposalId);
+
+      });
+
+      // ***************************************************************************************
+      // Passage de "Session de vote en cours" (3) à "Fermeture des votes" (4)
+      // ***************************************************************************************
+
+      it("Voting_03-Voting_03-Fonctionnement-2 : 3-4 : Should transition to 'Voting Session End'", async () =>
+      {
+        await this.contract_Voting_03_Instance.setStateEndVotingSession( {from: account_00_initial_owner_contract_Voting_03 } )
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_04_VotingSessionEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+      });      
+
+      // Account 06 : tester un vote une fois la session terminée
+      it("Voting_03-Voting_03-Fonctionnement-2 : 4.0 : Vote done ; Account 06 attempts to After session ended : should REVERT", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.vote( 0, {from: account_06 } )
+          , "Not in 'VotingSessionStarted' state. -- Reason given: Not in 'VotingSessionStarted' state.." 
+        );
+        expect(true).to.be.true;
+      });
+
+      it("Voting_03-Voting_03-Fonctionnement-2 : 4.1 : Vote done ; Owner count votes", async () =>
+      {
+        let winningProposalId = await this.contract_Voting_03_Instance.countVotes( {from: account_00_initial_owner_contract_Voting_03 } )
+        //console.log("winningProposalId="+winningProposalId)
+        expect( parseInt(winningProposalId,10) ).to.be.equal( 0 );
+      });
+
+      it("Voting_03-Voting_03-Fonctionnement-2 : 4.1 : Vote done ; Only Owner count votes : account 06 should revert", async () =>
+      {
+        await expectRevert
+        (
+          this.contract_Voting_03_Instance.countVotes( {from: account_06 } )
+          , "Ownable: caller is not the owner" 
+        );
+
+        currentStatus = await this.contract_Voting_03_Instance._workflowStatus();
+        expectedStatus = new BN( WorkflowStatus_04_VotingSessionEnded );
+        expect(currentStatus).to.be.a.bignumber.that.equals(expectedStatus);
+  
+      });
+      // View : countVotes
+
+      // Write : countAndTallyVotes
+
+    }); // contract Voting_03-Voting_03-Fonctionnement-2
+
+  }); // Serie 01 - 03 - 04 : Voting_03-Voting_03-Fonctionnement-2 : Fonctionnement
+
 
 }); // Serie 01 - 04 : Voting
     
