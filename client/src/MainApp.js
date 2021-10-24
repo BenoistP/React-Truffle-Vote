@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+// import { ToastContainer } from "react-toastr";
 /* Traduction */
 import { withTranslation /*, useTranslation */ } from 'react-i18next';
 
@@ -46,7 +46,10 @@ class MainApp extends Component
     /* Handlers */
     this.whitelistNewAddress = this.whitelistNewAddress.bind(this);
     this.registerProposal = this.registerProposal.bind(this);
-  }
+
+    this.initEventHandlers = this.initEventHandlers.bind(this);
+
+  } // constructor
   
   /* Variables globales du composant principal */
   state = {
@@ -193,7 +196,7 @@ get_workflowStatus = async (contractVoting) =>
  }
 
  /******************************
-  GoToNextState
+  goToNextState
 /*****************************/
   goToNextState = async () => {
     try
@@ -235,14 +238,35 @@ get_workflowStatus = async (contractVoting) =>
     }
     catch (error)
      {
+       let strDetails ="";
+       if (error.code != undefined)
+       {
+         switch (error.code)
+          {
+            case 4001 :
+              
+            default :
+
+          } // switch (error.code)
+
+          if (error.message != undefined)
+          {
+            strDetails = error.message
+          } // switch (error.code)
+
+          alert("transaction refusée par l'utilisateur : " + strDetails)
+
+       }
+      else
+      {
+        alert(
+          `Failed to load web3, accounts, or contract. Check console for details.`,
+        );
+        }
       // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
       console.error(error);
      }
-  }; // componentDidMount
-  
+  }; // goToNextState
 
 /* ****************************
   componentDidMount
@@ -254,11 +278,11 @@ componentDidMount = async () => {
     // Get network provider and web3 instance.
     const web3 = await getWeb3();
 
-    const { whitelistedAddresses } = this.state;
+    // const { whitelistedAddresses } = this.state;
 
     // Use web3 to get the user's accounts.
     const connectedAccountsAddrs = await web3.eth.getAccounts();
-    const connectedAccountAddr = toChecksumAddress(connectedAccountsAddrs[0])
+    // const connectedAccountAddr = toChecksumAddress(connectedAccountsAddrs[0])
 
     // Get the contract instance.
     const networkId = await web3.eth.net.getId();
@@ -269,100 +293,7 @@ componentDidMount = async () => {
       contractVoting_deployedNetwork && contractVoting_deployedNetwork.address,
     );
 
-    this.setState( { web3, connectedAccountAddr, contractVoting: contractInstanceVoting, ethereum: window.ethereum }, this.runInit );
-
-    // Mise en place du handler pour l'évènement -> changement de compte
-    window.ethereum.on("accountsChanged", accounts =>
-     {
-      this.handleAccountsChangedEvent(accounts)
-     });
-
-    // Mise en place du handler pour les évènements du contrat
-    // https://web3js.readthedocs.io/en/v1.2.0/web3-eth-contract.html#events-allevents
-    var contractInstanceVotingEvents = contractInstanceVoting.events.allEvents
-     (
-      { fromBlock: 'latest' },
-      (error, result) =>
-        {
-          if (error)
-          {
-           console.error("contractInstanceVotingEvents:error:"+error)
-          }
-         else
-          {
-           console.log("contractInstanceVotingEvents:result:"+result)
-
-          }
-        }
-     );
-
-     contractInstanceVotingEvents.on('data', event =>{
-        console.log("contractInstanceVotingEvents.on:data:event="+event)
-
-        if (event.event === "Whitelisted")
-          {
-            let whitelistedAddress = event.returnValues._address
-            alert( "Whitelisted:" +  whitelistedAddress)
-
-            whitelistedAddresses.push( whitelistedAddress )
-            this.setState({ whitelistedAddresses });
-          }
-       }
-     )
-
-
-    /*
-    contractInstanceVoting.monEvenement.watch((err, result) => {
-      if (err)
-       {
-        console.log('could not get event Won()')
-       }
-      else
-       {
-        console.log('could not get event Won()')
-          this.winEvent = result.args
-          this.pending = false
-       }
-      }) // watch
-      */
-       /*
-      events.watch(function(error, result)
-       {
-        if (!error)
-          {
-            console.log(result.event)
-            // if(['EventName1', 'EventName2'].includes(result.event))
-            //  {
-             //do
-            //  }
-          
-          }
-        else
-         {
-          // Faire une popup
-         }
-       }); // events.watch
-
-myContract.events.MyEvent({
-    filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
-    fromBlock: 0
-}, function(error, event){ console.log(event); })
-.on('data', function(event){
-    console.log(event); // same results as the optional callback above
-})
-.on('changed', function(event){
-    // remove event from local database
-})
-.on('error', console.error);
-
-        var event1 = contract.events.EventName1({from: address});
-        var event2 = contract.events.EventName2({from: address});
-        event1.watch(myCallback);
-        event2.watch(myCallback);
-
-        function myCallback(err, result) {
-        }
-       */
+    this.setState( { web3, /*connectedAccountAddr,*/ contractVoting: contractInstanceVoting, ethereum: window.ethereum }, this.runMainInit );
 
    }
   catch (error)
@@ -375,15 +306,79 @@ myContract.events.MyEvent({
    }
 }; // componentDidMount
 
+// -------------------------------------
+
+  /* ****************************
+  componentWillUnmount
+ *****************************/
+  componentWillUnmount() {
+  }
+
+
+/**
+ * ***************************************************************
+ * Evenements
+ * ***************************************************************
+ */
+
+    initEventHandlers = () => {
+
+    // Mise en place du handler pour l'évènement -> changement de compte
+    window.ethereum.on("accountsChanged", accounts =>
+     {
+      this.handleAccountsChangedEvent(accounts)
+     });
+
+
+  // Mise en place du handler pour les évènements du contrat
+    // https://web3js.readthedocs.io/en/v1.2.0/web3-eth-contract.html#events-allevents
+
+    const { contractVoting, whitelistedAddresses } = this.state;
+
+    var contractVotingEvents = contractVoting.events.allEvents
+     (
+      { fromBlock: 'latest' },
+      (error, result) =>
+        {
+          if (error)
+          {
+           console.error("contractVotingEvents:error:"+error)
+          }
+         else
+          {
+           console.log("contractVotingEvents:result:"+result)
+
+          }
+        }
+     ); // contractInstanceVoting.events.allEvents
+
+     contractVotingEvents.on('data', event =>{
+        console.log("contractVotingEvents.on:data:event="+event)
+
+        if (event.event === "Whitelisted")
+          {
+            let whitelistedAddress = event.returnValues._address
+            whitelistedAddresses.push( whitelistedAddress )
+            this.setState({ whitelistedAddresses });
+          }
+      }); // contractInstanceVotingEvents.on
+
+  }; // initEventHandlers
+
+
 
 /* ****************************
-  runInit
+  runMainInit
  *****************************/
 
-runInit = async() => {
+runMainInit = async() => {
+// console.debug("MainApp::runMainInit")
+
   await this.refreshContractVotingData()
   await this.refreshUserAccount() 
-} // runInit
+
+  this.initEventHandlers();
+} // runMainInit
 
 
 /* ****************************
