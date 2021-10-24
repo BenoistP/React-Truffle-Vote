@@ -24,6 +24,9 @@ import  { Alerts } from "./AppComponents-Alerts";
 /* Constantes */
 import  * as CONSTS from "./consts";
 
+/* Utils */
+import  { truncateString } from "./AppUtils";
+
 /* CSS spécifique pour la barre de progression */
 import "./App.css";
 
@@ -50,6 +53,9 @@ class MainApp extends Component
     this.registerProposal = this.registerProposal.bind(this);
 
     this.initEventHandlers = this.initEventHandlers.bind(this);
+    this.handleError = this.handleError.bind(this);
+    this.updateWorkflowStatus = this.updateWorkflowStatus.bind(this);
+
 
   } // constructor
   
@@ -205,8 +211,8 @@ get_workflowStatus = async (contractVoting) =>
   goToNextState
 /*****************************/
   goToNextState = async () => {
-    const { connectedAccountAddr, contractVoting, alertsList } = this.state;
-    const { t } = this.props;
+    const { connectedAccountAddr, contractVoting } = this.state;
+    // const { t } = this.props;
 
     try
      {
@@ -245,47 +251,10 @@ get_workflowStatus = async (contractVoting) =>
 
       this.setState({ workflowStatus: workflowStatus_new, winningProposalId });
     }
+  // Catch any errors for any of the above operations.
     catch (error)
      {
-       let newAlert = {}
-       //let strDetails ="";
-       if (error.code != undefined)
-       {
-
-        if (error.code == 4001)
-         {
-          newAlert.title = t("Errors.4001.title")
-          newAlert.variant = t("Errors.4001.variant")
-          newAlert.message = t("Errors.4001.message")
-     } // 4001
-        else
-        {
-          newAlert.title = t("Errors.default.title")
-          newAlert.variant = t("Errors.default.variant")
-          newAlert.message = t("Errors.default.message")
-      } // default
-
-          if (error.message != undefined)
-          {
-            newAlert.detail = error.message
-          } // switch (error.code)
-
-          let now = new Date( );
-          newAlert.time= now.toLocaleDateString( t("Formats.date") ) + " " + new Intl.DateTimeFormat( t("Formats.date"), {hour: "numeric", minute: "numeric", second: "numeric",
-          timeZoneName: "short"} ).format(  )
-
-          const alertsListUpdated = [...alertsList, newAlert ]
-
-          this.setState({ alertsList: alertsListUpdated })
-        }
-      else
-      {
-        newAlert(
-          `Failed to load web3, accounts, or contract. Check console for details.`,
-        );
-        }
-      // Catch any errors for any of the above operations.
-      console.error(error);
+      this.handleError( error, true )
      }
   }; // goToNextState
 
@@ -342,7 +311,8 @@ componentDidMount = async () => {
  * ***************************************************************
  */
 
-    initEventHandlers = () => {
+  initEventHandlers = () =>
+   {
 
     // Mise en place du handler pour l'évènement -> changement de compte
     window.ethereum.on("accountsChanged", accounts =>
@@ -354,7 +324,7 @@ componentDidMount = async () => {
   // Mise en place du handler pour les évènements du contrat
     // https://web3js.readthedocs.io/en/v1.2.0/web3-eth-contract.html#events-allevents
 
-    const { contractVoting, whitelistedAddresses } = this.state;
+    const { contractVoting, whitelistedAddresses, workflowStatus } = this.state;
 
     var contractVotingEvents = contractVoting.events.allEvents
      (
@@ -373,20 +343,46 @@ componentDidMount = async () => {
         }
      ); // contractInstanceVoting.events.allEvents
 
+     
      contractVotingEvents.on('data', event =>{
-        console.log("contractVotingEvents.on:data:event="+event)
-
-        if (event.event === "Whitelisted")
+        // console.log("contractVotingEvents.on:data:event="+event)
+// alert("event="+event + " event.event="+event.event)
+        //if (event.event === "Whitelisted")
+        if (event.event === "VoterRegistered")
           {
-            let whitelistedAddress = event.returnValues._address
+// alert("if VoterRegistered")
+            //let whitelistedAddress = event.returnValues._address
+            let whitelistedAddress = event.returnValues.voterAddress
+// alert("event.returnValues.voterAddress="+event.returnValues.voterAddress) 
             whitelistedAddresses.push( whitelistedAddress )
             this.setState({ whitelistedAddresses });
           }
+        else if (event.event === "WorkflowStatusChange")
+          {
+            this.updateWorkflowStatus()
+/*
+alert("if WorkflowStatusChange")
+            async function asyncFunc(workflowStatus)
+            {
+              const newWorkflowStatus = await this.get_workflowStatus(contractVoting)
+ alert("newWorkflowStatus="+newWorkflowStatus)
+              this.setState({ workflowStatus: newWorkflowStatus });
+            }
+            asyncFunc(workflowStatus)
+*/
+          }
+      
       }); // contractInstanceVotingEvents.on
 
   }; // initEventHandlers
 
 
+updateWorkflowStatus = async() => {
+  alert("updateWorkflowStatus")
+  const { contractVoting } = this.state;
+  const newWorkflowStatus = await this.get_workflowStatus(contractVoting)
+  this.setState({ workflowStatus: newWorkflowStatus });
+}
 
 /* ****************************
   runMainInit
@@ -394,11 +390,18 @@ componentDidMount = async () => {
 
 runMainInit = async() => {
 // console.debug("MainApp::runMainInit")
+  try{
+      await this.refreshContractVotingData()
+      await this.refreshUserAccount() 
 
-  await this.refreshContractVotingData()
-  await this.refreshUserAccount() 
+      this.initEventHandlers();
+  } // try
+catch (error)
+ {
+  // Catch any errors for any of the above operations.
+  this.handleError( error, true )
+ } // catch
 
-  this.initEventHandlers();
 } // runMainInit
 
 
@@ -430,10 +433,19 @@ runMainInit = async() => {
    Interaction avec le smart contract pour ajouter un compte 
    ------------------------------------------------------------- */
   whitelistNewAddress = async(address) => {
+
+    try{
+
     const { connectedAccountAddr, contractVoting } = this.state;
     await contractVoting.methods.whitelist(address).send({from: connectedAccountAddr});
     // Mettre à jour les données du contrat
     await this.refreshContractVotingData()
+  } // try
+  catch (error)
+   {
+    // Catch any errors for any of the above operations.
+    this.handleError( error, true )
+   } // catch
   } // whitelistNewAddress
 
 
@@ -466,17 +478,74 @@ refreshUserAccount = async() => {
   catch (error)
    {
     // Catch any errors for any of the above operations.
-    alert(
-      `Failed to load web3, accounts, or contract. Check console for details.`,
-    );
-    console.error(error);
+    this.handleError( error, true )
    } // catch
+
 }; // refreshUserAccount
 
+/* ************************************
+  errorHandlers
 
-/* ****************************
+ ************************************* */
+/* -------------------------------
+  Smart contract errors
+ -------------------------------- */
+ 
+handleError = (error, bLogToConsole) => {
+  const { t } = this.props;
+  const { alertsList } = this.state;
+  let newAlert = {}
+
+  let now = new Date( );
+  newAlert.time= now.toLocaleDateString( t("Formats.date") ) + " " +
+     new Intl.DateTimeFormat( t("Formats.date"), {hour: "numeric", minute: "numeric", second: "numeric", timeZoneName: "short"} ).format(  )
+
+  if (bLogToConsole)
+  {
+    console.error(error);
+  }
+  //let strDetails ="";
+  if (error.code != undefined)
+  {
+
+   if (error.code == 4001)
+    {
+     newAlert.title = t("Errors.4001.title")
+     newAlert.variant = t("Errors.4001.variant")
+     newAlert.message = t("Errors.4001.message")
+} // 4001
+   else
+   {
+     newAlert.title = t("Errors.default.title")
+     newAlert.variant = t("Errors.default.variant")
+     newAlert.message = t("Errors.default.message")
+ } // default
+// debugger;
+     if (error.message != undefined)
+     {
+       newAlert.detail = truncateString(error.message, 50)
+     } // switch (error.code)
+   }
+ else
+ {
+     newAlert.title = t("Errors.default.title")
+     newAlert.variant = t("Errors.default.variant")
+     newAlert.message = t("Errors.default.message")
+     newAlert.detail = truncateString(error, 100)
+ } // else
+
+ const alertsListUpdated = [...alertsList, newAlert ]
+ this.setState({ alertsList: alertsListUpdated })
+
+} // handleError
+
+/* ************************************
+  Smart contract interaction methods
+
+ ************************************* */
+/* -------------------------------
   getUserVote
- *****************************/
+ -------------------------------- */
   getUserVote = async( connectedAccountAddr ) => {
     const { workflowStatus, contractVoting } = this.state;
     const res = ( workflowStatus >= CONSTS.STATUSES_VALUES.STATUS_03_VOTINGSESSIONSTARTED ? await contractVoting.methods.hasVoted(connectedAccountAddr).call() : [false, 0] )

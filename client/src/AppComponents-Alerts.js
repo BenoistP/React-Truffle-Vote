@@ -27,7 +27,7 @@ function Alerts( { alertsList/*connectedAccountAddr, workflowStatus, whitelisted
 {
    return (
 
-    <ToastContainer className="p-3" position={"top-end"}>
+    <ToastContainer className="p-3" position={"bottom-end"}>
 { /* }
 <Alert title={"Titre 1"} message={"Message 1"} detail={"detail 1"} time={"time 1"} variant={"warning"} />
       <Alert title={"Titre 2"} message={"Message 2"} detail={"detail 2"} time={"time 2"} variant={"primary"} />
@@ -54,7 +54,7 @@ function Alerts( { alertsList/*connectedAccountAddr, workflowStatus, whitelisted
 {
 alertsList &&
       alertsList.map((alert,idx) =>
-        <Alert title={alert.title} message={alert.message} detail={alert.detail} time={alert.time} variant={alert.variant} />
+        <Alert id={idx} title={alert.title} message={alert.message} detail={alert.detail} time={alert.time} variant={alert.variant} />
       ) // alertsList.forEach
 }
   </ToastContainer>
@@ -67,13 +67,13 @@ alertsList &&
 
 // ------------------------------------------------------------------------------------------
 
-function Alert({ title, message, detail, time, variant })
+function Alert({ title, message, detail, time, variant, id })
 {
   const [show, setShow] = useState(true);
   const { t } = useTranslation();
 
     return (
-      <Toast bg={variant}  onClose={() => setShow(false)} show={show} animation={true} delay={60000} autohide>
+      <Toast bg={variant} onClose={() => setShow(false)} show={show} animation={true} delay={60000} autohide key={id} >
         <Toast.Header closeButton={true} >
           <img
             src="holder.js/20x20?text=%20"
