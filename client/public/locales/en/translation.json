@@ -91,4 +91,23 @@
         }
 
     }
+  ,
+  "Errors":
+  {
+    "4001": {
+      "title" : "Transaction signature denied",
+      "variant" : "warning"
+    },
+    "default": {
+      "title" : "Erreur",
+      "message":"Erreur",
+      "variant" : "danger"
+    }
+    
+  },
+
+  "Formats" :{
+    "date" : "en-US"
+  }
+
 }

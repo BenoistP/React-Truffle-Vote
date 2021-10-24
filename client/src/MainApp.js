@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-// import { ToastContainer } from "react-toastr";
 /* Traduction */
 import { withTranslation /*, useTranslation */ } from 'react-i18next';
+
 
 /* Bootstrap */
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -18,6 +18,8 @@ import  { AdminTranslated } from "./AppComponents-Admin";
 import  { Toolbar } from "./AppComponents-Header";
 import  { AdminToolbar } from "./AppComponents-Admin-Header";
 import  { User } from "./AppComponents-User";
+import  { Alerts } from "./AppComponents-Alerts";
+
 
 /* Constantes */
 import  * as CONSTS from "./consts";
@@ -60,7 +62,8 @@ class MainApp extends Component
     ethereum : null,
     owner: null,
     allProposals: null,
-    winningProposalId: null
+    winningProposalId: null,
+    alertsList: []
   };
 
   // ----------------------------
@@ -68,24 +71,27 @@ class MainApp extends Component
   render()
    {
     const { workflowStatus, whitelistedAddresses, allProposals, hasVoted, votedProposalId, winningProposalId } = this.state;
-
     if (!this.state.web3) {
       return (
        <Web3Loader/>
       )
     }
+
+
     return (
         /* Début : 0 conteneur de Toute l'App */
-        <div className="container-fluid "> 
+        <div className="container-fluid bg-dark"> 
+
           {/* Début : 1.0 conteneur LIGNE de l'entête */}
-          <div className="row ">
+          <div className="row bg-dark">
             {/* Début : 1.1 entête */}
-            <div className="container-fluid ">
+            <div className="container-fluid bg-dark">
               {/* Début : 1.1.1 barre de progression */}
               <div className="row bg-dark">
                     <div className="container-fluid col-sm-12 col-md-12 col-lg-12">
                     <Toolbar handleReload={this.handleReload} owner={this.state.owner} connectedAccountAddr={this.state.connectedAccountAddr} hasVoted={hasVoted} />
-                    </div>
+                    <Alerts alertsList={ this.state.alertsList } />
+                  </div>
               </div>
               <div className="row bg-dark">
                 <br/>
@@ -113,7 +119,7 @@ class MainApp extends Component
 
 
           {/* Début : 2.0 conteneur LIGNE du contenu de l'App */}
-          <div className="row bg-warning">
+          <div className="row bg-dark">
 
             {/* Début : 2.1 conteneur du contenu de l'App */}
             <div className="container-fluid bg-dark">
@@ -139,7 +145,7 @@ class MainApp extends Component
 
                   {/* Début : 2.1.1.2 conteneur de la deuxième ligne de contenu de l'App */}
                   <div className="row bg-dark border border-5 border-white text-light">
-                    <div className="container ">
+                    <div className="container bg-dark">
 
                        <User connectedAccountAddr={this.state.connectedAccountAddr} workflowStatus={workflowStatus} whitelistedAddresses={whitelistedAddresses} hasVoted={hasVoted} votedProposalId={votedProposalId} winningProposalId={winningProposalId} onRegisterNewProposal={this.registerProposal} allProposals={allProposals} onVoteForProposal={this.voteForProposal} />
 
@@ -160,7 +166,7 @@ class MainApp extends Component
           {/* Fin : 2.0 conteneur LIGNE du contenu de l'App */}
 
           {/* Début : 3.0 conteneur du bas de l'App */}
-          <div className="row bg-secondary">
+          <div className="row bg-dark">
             
           </div>
           {/* Fin : 3.0 conteneur du bas de l'App */}
@@ -199,9 +205,12 @@ get_workflowStatus = async (contractVoting) =>
   goToNextState
 /*****************************/
   goToNextState = async () => {
+    const { connectedAccountAddr, contractVoting, alertsList } = this.state;
+    const { t } = this.props;
+
     try
      {
-      const { connectedAccountAddr, contractVoting } = this.state;
+      // const { connectedAccountAddr, contractVoting, alertsList } = this.state;
       const workflowStatus_current_val = await this.get_workflowStatus(contractVoting)
 
       switch (workflowStatus_current_val) {
@@ -238,28 +247,40 @@ get_workflowStatus = async (contractVoting) =>
     }
     catch (error)
      {
-       let strDetails ="";
+       let newAlert = {}
+       //let strDetails ="";
        if (error.code != undefined)
        {
-         switch (error.code)
-          {
-            case 4001 :
-              
-            default :
 
-          } // switch (error.code)
+        if (error.code == 4001)
+         {
+          newAlert.title = t("Errors.4001.title")
+          newAlert.variant = t("Errors.4001.variant")
+          newAlert.message = t("Errors.4001.message")
+     } // 4001
+        else
+        {
+          newAlert.title = t("Errors.default.title")
+          newAlert.variant = t("Errors.default.variant")
+          newAlert.message = t("Errors.default.message")
+      } // default
 
           if (error.message != undefined)
           {
-            strDetails = error.message
+            newAlert.detail = error.message
           } // switch (error.code)
 
-          alert("transaction refusée par l'utilisateur : " + strDetails)
+          let now = new Date( );
+          newAlert.time= now.toLocaleDateString( t("Formats.date") ) + " " + new Intl.DateTimeFormat( t("Formats.date"), {hour: "numeric", minute: "numeric", second: "numeric",
+          timeZoneName: "short"} ).format(  )
 
-       }
+          const alertsListUpdated = [...alertsList, newAlert ]
+
+          this.setState({ alertsList: alertsListUpdated })
+        }
       else
       {
-        alert(
+        newAlert(
           `Failed to load web3, accounts, or contract. Check console for details.`,
         );
         }
