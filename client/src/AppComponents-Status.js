@@ -58,7 +58,7 @@ class Status extends Component
 
     return (
       <div className="row ">
-        <div className="col-sm-12 text-center"><p className="text-primary fw-bold">{t("votingContract.app.dashboard.status.title")}</p>
+        <div className="col-sm-12 text-center"><p className="text-light fw-bold">{t("votingContract.app.dashboard.status.title")}</p>
         {
           { "ProgressBar": <VoteStatusProgressBar states={states} workflowStatus={ workflowStatus }/>,
             "ProgressStep": <VoteStatusProgressStep states={states} workflowStatus={ workflowStatus }/>

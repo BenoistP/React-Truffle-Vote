@@ -5,6 +5,7 @@ import { withTranslation /*, useTranslation */ } from 'react-i18next';
 
 /* Bootstrap */
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Container from 'react-bootstrap/Container';
 
 // Interface du smartcontract
 import contractVotingImport from "./contracts/Voting_03.json";
@@ -55,6 +56,7 @@ class MainApp extends Component
     this.initEventHandlers = this.initEventHandlers.bind(this);
     this.handleError = this.handleError.bind(this);
     this.updateWorkflowStatus = this.updateWorkflowStatus.bind(this);
+    this.agetAllProposals = this.agetAllProposals.bind(this);
 
 
   } // constructor
@@ -86,6 +88,7 @@ class MainApp extends Component
 
     return (
         /* Début : 0 conteneur de Toute l'App */
+        <Container  className="vh-100 d-flex flex-column ">
         <div className="container-fluid bg-dark"> 
 
           {/* Début : 1.0 conteneur LIGNE de l'entête */}
@@ -179,8 +182,9 @@ class MainApp extends Component
 
 
         </div>
-        /* Fin : 0 conteneur de Toute l'App */
 
+        </Container>
+        /* Fin : 0 conteneur de Toute l'App */
         );
 
   } // render()
@@ -324,7 +328,7 @@ componentDidMount = async () => {
   // Mise en place du handler pour les évènements du contrat
     // https://web3js.readthedocs.io/en/v1.2.0/web3-eth-contract.html#events-allevents
 
-    const { contractVoting, whitelistedAddresses, workflowStatus } = this.state;
+    const { contractVoting, whitelistedAddresses } = this.state;
 
     var contractVotingEvents = contractVoting.events.allEvents
      (
@@ -345,40 +349,43 @@ componentDidMount = async () => {
 
      
      contractVotingEvents.on('data', event =>{
-        // console.log("contractVotingEvents.on:data:event="+event)
-// alert("event="+event + " event.event="+event.event)
-        //if (event.event === "Whitelisted")
         if (event.event === "VoterRegistered")
           {
-// alert("if VoterRegistered")
-            //let whitelistedAddress = event.returnValues._address
             let whitelistedAddress = event.returnValues.voterAddress
-// alert("event.returnValues.voterAddress="+event.returnValues.voterAddress) 
             whitelistedAddresses.push( whitelistedAddress )
             this.setState({ whitelistedAddresses });
           }
         else if (event.event === "WorkflowStatusChange")
           {
             this.updateWorkflowStatus()
-/*
-alert("if WorkflowStatusChange")
-            async function asyncFunc(workflowStatus)
-            {
-              const newWorkflowStatus = await this.get_workflowStatus(contractVoting)
- alert("newWorkflowStatus="+newWorkflowStatus)
-              this.setState({ workflowStatus: newWorkflowStatus });
-            }
-            asyncFunc(workflowStatus)
-*/
           }
-      
+        else if (event.event === "ProposalRegistered")
+          {
+            let proposalId = event.returnValues.proposalId
+            // Liste des propositions
+            const allProposals = this.agetAllProposals();
+            // alert("contractVotingEvents.on:"+JSON.stringify(allProposals))
+            // this.setState({ allProposals });
+          }
+          /*
+          else if (event.event === "Voted")
+          {
+            let voter = event.returnValues.voter
+            let proposalId = event.returnValues.proposalId
+          }
+          */
       }); // contractInstanceVotingEvents.on
 
   }; // initEventHandlers
 
+ agetAllProposals = async() => {
+  let allProposals = await this.getAllProposals();
+   alert("agetAllProposals:"+JSON.stringify(allProposals))
+   this.setState({ allProposals });
+  // return proposalsObjectsArray
+ }
 
 updateWorkflowStatus = async() => {
-  alert("updateWorkflowStatus")
   const { contractVoting } = this.state;
   const newWorkflowStatus = await this.get_workflowStatus(contractVoting)
   this.setState({ workflowStatus: newWorkflowStatus });
@@ -389,7 +396,7 @@ updateWorkflowStatus = async() => {
  *****************************/
 
 runMainInit = async() => {
-// console.debug("MainApp::runMainInit")
+
   try{
       await this.refreshContractVotingData()
       await this.refreshUserAccount() 
@@ -399,7 +406,7 @@ runMainInit = async() => {
 catch (error)
  {
   // Catch any errors for any of the above operations.
-  this.handleError( error, true )
+  this.handleError( error, true, true )
  } // catch
 
 } // runMainInit
@@ -434,18 +441,19 @@ catch (error)
    ------------------------------------------------------------- */
   whitelistNewAddress = async(address) => {
 
-    try{
+    try
+     {
 
-    const { connectedAccountAddr, contractVoting } = this.state;
-    await contractVoting.methods.whitelist(address).send({from: connectedAccountAddr});
-    // Mettre à jour les données du contrat
-    await this.refreshContractVotingData()
-  } // try
-  catch (error)
-   {
-    // Catch any errors for any of the above operations.
-    this.handleError( error, true )
-   } // catch
+      const { connectedAccountAddr, contractVoting } = this.state;
+      await contractVoting.methods.whitelist(address).send({from: connectedAccountAddr});
+      // Mettre à jour les données du contrat
+      await this.refreshContractVotingData()
+     } // try
+    catch (error)
+     {
+      // Catch any errors for any of the above operations.
+      this.handleError( error, true )
+     } // catch
   } // whitelistNewAddress
 
 
@@ -473,7 +481,6 @@ refreshUserAccount = async() => {
     const votedProposalId = userVote[1]
 
     this.setState( { connectedAccountAddr, hasVoted, votedProposalId } )
-
    } // try
   catch (error)
    {
@@ -491,7 +498,7 @@ refreshUserAccount = async() => {
   Smart contract errors
  -------------------------------- */
  
-handleError = (error, bLogToConsole) => {
+handleError = (error, bLogToConsole, bshowAlertPopup) => {
   const { t } = this.props;
   const { alertsList } = this.state;
   let newAlert = {}
@@ -504,7 +511,12 @@ handleError = (error, bLogToConsole) => {
   {
     console.error(error);
   }
-  //let strDetails ="";
+  if (bshowAlertPopup)
+  {
+    alert( t("Errors.default.title") + "\n" + error)
+    return
+  }
+
   if (error.code != undefined)
   {
 
@@ -513,14 +525,14 @@ handleError = (error, bLogToConsole) => {
      newAlert.title = t("Errors.4001.title")
      newAlert.variant = t("Errors.4001.variant")
      newAlert.message = t("Errors.4001.message")
-} // 4001
+    } // 4001
    else
-   {
+    {
      newAlert.title = t("Errors.default.title")
      newAlert.variant = t("Errors.default.variant")
      newAlert.message = t("Errors.default.message")
- } // default
-// debugger;
+    } // default
+
      if (error.message != undefined)
      {
        newAlert.detail = truncateString(error.message, 50)
@@ -570,6 +582,7 @@ handleError = (error, bLogToConsole) => {
 
         proposalsObjectsArray.push(proposal)
     } // for
+    // alert(JSON.stringify(proposalsObjectsArray))
       return proposalsObjectsArray;
   } // getAllProposals
 
@@ -579,28 +592,43 @@ handleError = (error, bLogToConsole) => {
   *****************************/
   registerProposal = async(description) =>
   {
-   const { connectedAccountAddr, contractVoting } = this.state;   
-    // Interaction avec le smart contract pour ajouter une proposition
-    await contractVoting.methods.registerProposal(description).send({from: connectedAccountAddr});
-    // Recharger les propositions
-    const allProposals = await this.getAllProposals()
-    this.setState({ allProposals });
+   try
+    {
+      const { connectedAccountAddr, contractVoting } = this.state;   
+      // Interaction avec le smart contract pour ajouter une proposition
+      await contractVoting.methods.registerProposal(description).send({from: connectedAccountAddr});
+      // Recharger les propositions
+      const allProposals = await this.getAllProposals()
+      this.setState({ allProposals });
+    } // try
+  catch (error)
+   {
+    // Catch any errors for any of the above operations.
+    this.handleError( error, true )
+   } // catch
   } // registerProposal
 
 /* ****************************
   voteForProposal
   *****************************/
   voteForProposal = async(proposalId) => {
-    const { connectedAccountAddr, contractVoting } = this.state;
-    // Interaction avec le smart contract pour voter pour une proposition
-    await contractVoting.methods.vote(proposalId).send({from: connectedAccountAddr});
+    try
+     {
+      const { connectedAccountAddr, contractVoting } = this.state;
+      // Interaction avec le smart contract pour voter pour une proposition
+      await contractVoting.methods.vote(proposalId).send({from: connectedAccountAddr});
 
-    const userVote = await this.getUserVote( connectedAccountAddr )
-    const hasVoted = userVote[0]
-    const votedProposalId = userVote[1]
+      const userVote = await this.getUserVote( connectedAccountAddr )
+      const hasVoted = userVote[0]
+      const votedProposalId = userVote[1]
 
-    this.setState( { hasVoted, votedProposalId } )
-   
+      this.setState( { hasVoted, votedProposalId } )
+    } // try
+  catch (error)
+   {
+    // Catch any errors for any of the above operations.
+    this.handleError( error, true )
+   } // catch
   } // registerProposal
 
 /* ****************************
@@ -618,17 +646,24 @@ handleError = (error, bLogToConsole) => {
   countAndTallyVotes
  *****************************/
   countAndTallyVotes = async() => {
-    const { connectedAccountAddr, contractVoting } = this.state;
-    // Interaction avec le smart contract pour décompter les votes et écrire le résultat on chain
-    // permet le décomptage qq. soit le nombre votes AVEC transaction
-    // Appel seulement autorisé pour le PROPRIETAIRE du contrat
-    const winningProposalId = await contractVoting.methods.countAndTallyVotes().send({from: connectedAccountAddr});
+    try
+     {
+      const { connectedAccountAddr, contractVoting } = this.state;
+      // Interaction avec le smart contract pour décompter les votes et écrire le résultat on chain
+      // permet le décomptage qq. soit le nombre votes AVEC transaction
+      // Appel seulement autorisé pour le PROPRIETAIRE du contrat
+      const winningProposalId = await contractVoting.methods.countAndTallyVotes().send({from: connectedAccountAddr});
+      
+      this.setState( { winningProposalId } )
     
-    this.setState( { winningProposalId } )
-    
-    return winningProposalId
+      return winningProposalId
+      } // try
+    catch (error)
+     {
+      // Catch any errors for any of the above operations.
+      this.handleError( error, true )
+     } // catch
   } // countAndTallyVotes
-
 
 // //////////////////////////////////////////////////////////////////////////////////////////
 

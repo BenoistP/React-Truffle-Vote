@@ -18,9 +18,9 @@ truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Transitions-CheckAdmi
 truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Transitions-CheckAdminOnly-NotWhitelisted" --compile-none
 truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Transitions-CheckAdminOnly-Whitelisted" --compile-none
 
-truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Fonctionnement" --compile-none
+truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Process" --compile-none
 
-truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Fonctionnement-1" --compile-none
-truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Fonctionnement-2" --compile-none
+truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Process-1" --compile-none
+truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Process-2" --compile-none
 
 TESTER LES EVENEMENTS

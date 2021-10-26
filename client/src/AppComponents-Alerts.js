@@ -28,35 +28,12 @@ function Alerts( { alertsList/*connectedAccountAddr, workflowStatus, whitelisted
    return (
 
     <ToastContainer className="p-3" position={"bottom-end"}>
-{ /* }
-<Alert title={"Titre 1"} message={"Message 1"} detail={"detail 1"} time={"time 1"} variant={"warning"} />
-      <Alert title={"Titre 2"} message={"Message 2"} detail={"detail 2"} time={"time 2"} variant={"primary"} />
-      <Alert title={"Titre 3"} message={"Message 3"} detail={"detail 3"} time={"time 3"} variant={"secondary"} />
-      <Alert title={"Titre 4"} message={"Message 4"} detail={"detail 4"} time={"time 4"} variant={"danger"} />
-      <Alert title={"Titre 5"} message={"Message 5"} detail={"detail 5"} time={"time 5"} variant={"info"} />
-      <Alert title={"Titre 6"} message={"Message 6"} detail={"detail 6"} time={"time 6"} variant={"light"} />
-      <Alert title={"Titre 7"} message={"Message 7"}  time={"time 7"} style={"dark"} />
-{ 
-  
-        alertsList &&
-      alertsList.map((alert,idx) =>
-        <Alert title={alert.title} message={alert.message} detail={alert.detail} time={alert.time} variant={alert.variant} />
-      ) // alertsList.forEach
-
-   <div className="bg-light">
-  {
- JSON.stringify(alertsList) 
- 
-  </div>
-  */
- 
- }
-{
-alertsList &&
-      alertsList.map((alert,idx) =>
-        <Alert id={idx} title={alert.title} message={alert.message} detail={alert.detail} time={alert.time} variant={alert.variant} />
-      ) // alertsList.forEach
-}
+    {
+    alertsList &&
+          alertsList.map((alert,idx) =>
+            <Alert id={idx} title={alert.title} message={alert.message} detail={alert.detail} time={alert.time} variant={alert.variant} />
+          ) // alertsList.forEach
+    }
   </ToastContainer>
   
 
@@ -73,7 +50,7 @@ function Alert({ title, message, detail, time, variant, id })
   const { t } = useTranslation();
 
     return (
-      <Toast bg={variant} onClose={() => setShow(false)} show={show} animation={true} delay={60000} autohide key={id} >
+      <Toast bg={variant} onClose={() => setShow(false)} show={show} animation={true} delay={60000} autohide key={id} > 
         <Toast.Header closeButton={true} >
           <img
             src="holder.js/20x20?text=%20"

@@ -117,7 +117,6 @@ class AdminInputNewAddress extends Component
   handleOnClickWhitelistNewAddress(e)
   {
    this.props.handleWhitelistNewAddress( this.newAddress.value );
-   //this.handleOnClickClearNewAddress()
   } // handleOnClickWhitelistNewAddress
 
 
@@ -164,8 +163,7 @@ class AdminInputNewAddress extends Component
       const { t } = this.props;
       return (
           <div style={{display: 'flex', justifyContent: 'center'}} >
-  
-          <Card style={{ width: '50rem' }}>
+          <Card style={{ width: '50rem' }} bg="dark" border="light"  >
             <Card.Header><strong>{t("votingContract.app.admin.whitelist.whitelistNewAccount")}</strong></Card.Header>
             <Card.Body>
               <Form.Group>
@@ -182,12 +180,12 @@ class AdminInputNewAddress extends Component
               />
               </Form.Group>
             </Card.Body>
-            <Card.Footer>
+            <Card.Footer >
             <ListGroup variant="flush">
-              <ListGroup.Item className="text-center">
+              <ListGroup.Item className="text-center bg-dark">
                 <ButtonGroup aria-label="Input address action">
-                  <Button onClick={ (e) => { this.handleOnClickClearNewAddress() } } variant="danger"> <EraserFill/> </Button>
-                  <Button disabled={!this.state.isValidAddress} onClick={ this.handleOnClickWhitelistNewAddress } variant={this.state.isValidAddress?"primary":"dark"} > <Check2/> {t("votingContract.app.admin.whitelist.whitelist")} </Button>
+                  <Button onClick={ (e) => { this.handleOnClickClearNewAddress() } } variant="warning" className="btn-outline-light"> <EraserFill/> </Button>
+                  <Button disabled={!this.state.isValidAddress} onClick={ this.handleOnClickWhitelistNewAddress } variant={this.state.isValidAddress?"primary":"dark"} className="btn-outline-light"> <Check2/> {t("votingContract.app.admin.whitelist.whitelist")} </Button>
                 </ButtonGroup>
               </ListGroup.Item>
             </ListGroup>

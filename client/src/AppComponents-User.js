@@ -226,7 +226,7 @@ function UnHandled({ whitelistedUser })
 function NotWhitelistedUser({ /* TODO */ })
 {
   return (
-    <div>Component :  UnwhitelistedUser</div>    
+    <div></div>    
   );
 } // UnwhitelistedUser
 
