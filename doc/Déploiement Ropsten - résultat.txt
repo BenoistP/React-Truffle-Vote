@@ -1,3 +1,114 @@
+Compiling your contracts...
+===========================
+> Compiling @openzeppelin\contracts\GSN\Context.sol
+> Compiling @openzeppelin\contracts\access\Ownable.sol
+> Compiling @openzeppelin\contracts\math\SafeMath.sol
+> Compiling @openzeppelin\contracts\token\ERC20\ERC20.sol
+> Compiling @openzeppelin\contracts\token\ERC20\IERC20.sol
+> Compiling @openzeppelin\contracts\utils\Address.sol
+> Compiling .\contracts\Admin_WL_03.sol
+> Compiling .\contracts\ERC20Token.sol
+> Compiling .\contracts\Migrations.sol
+> Compiling .\contracts\SimpleStorage.sol
+> Compiling .\contracts\Voting_03.sol
+> Artifacts written to C:\tmp\DEV-new\ETH\Alyra\React-Truffle-Vote\client\src\contracts
+> Compiled successfully using:
+   - solc: 0.6.12+commit.27d51765.Emscripten.clang
+
+
+
+Starting migrations...
+======================
+> Network name:    'ropsten'
+> Network id:      3
+> Block gas limit: 8000000 (0x7a1200)
+
+
+1_initial_migration.js
+======================
+
+   Replacing 'Migrations'
+   ----------------------
+   > transaction hash:    0xe7d93a3a2779126fd329efe4ff50b28e5c987282efcc7db7787a62758186883d
+   > Blocks: 1            Seconds: 16
+   > contract address:    0x4553bC605418c48bd70CC4Be7A449F41BCCb084B
+   > block number:        11305135
+   > block timestamp:     1635277573
+   > account:             0x2311C8042D56B6aBABdFB3af738662811DeD0f8B
+   > balance:             14.969632119491192241
+   > gas used:            160495 (0x272ef)
+   > gas price:           2.500000017 gwei
+   > value sent:          0 ETH
+   > total cost:          0.000401237502728415 ETH
+
+   Pausing for 2 confirmations...
+   ------------------------------
+   > confirmation number: 1 (block: 11305136)
+   > confirmation number: 2 (block: 11305137)
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------     
+   > Total cost:     0.000401237502728415 ETH
+
+
+3_deploy_contractsVoting.js
+===========================
+
+   Replacing 'Voting_03'
+   ---------------------
+   > transaction hash:    0x8a45cc7650d7d0fafa9a5061f7e622b37930164a7016a89b3e1cc3c37383d113
+   > Blocks: 0            Seconds: 4
+   > contract address:    0xa0E35fAb8C37D3A0141FA45343fb8bF1Ab6fF632
+   > block number:        11305141
+   > block timestamp:     1635277657
+   > account:             0x2311C8042D56B6aBABdFB3af738662811DeD0f8B
+   > balance:             14.963106231962432598
+   > gas used:            2564617 (0x272209)
+   > gas price:           2.500000011 gwei
+   > value sent:          0 ETH
+   > total cost:          0.006411542528210787 ETH
+
+   Pausing for 2 confirmations...
+   ------------------------------
+   > confirmation number: 1 (block: 11305143)
+   > confirmation number: 2 (block: 11305144)
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:     0.006411542528210787 ETH
+
+
+Summary
+=======
+> Total deployments:   2
+> Final cost:          0.006812780030939202 ETH
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Starting migrations...
 ======================
 > Network name:    'ropsten'
