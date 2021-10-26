@@ -42,13 +42,13 @@ module.exports = {
         port: 7545, // le port rpc de notre réseau ganache 
         network_id: "3333",// le network id de notre réseau ganache 
      }
-/*
+
    ,
     ropsten:
     {
   //     provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/YOUR-PROJECT-ID`),
   //     provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/`+myInfuraProjectId),
-  //     provider: () => new HDWalletProvider( process.env.mnemonic, `https://ropsten.infura.io/v3/`+myInfuraProjectId),
+       provider: () => new HDWalletProvider( process.env.mnemonic, `https://ropsten.infura.io/v3/`+myInfuraProjectId),
   
        network_id: network_id_ropsten,       // Ropsten's id
        gas: 5500000,        // Ropsten has a lower block limit than mainnet
@@ -56,7 +56,7 @@ module.exports = {
        timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
        skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
        }
-*/
+
 } // networks
 
 };
