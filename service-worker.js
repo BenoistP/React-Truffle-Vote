@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/React-Truffle-Vote/precache-manifest.49c865633294e8469391c384bf3870a0.js"
+  "/React-Truffle-Vote/precache-manifest.5906329636616fa346d5605d392d34ff.js"
 );
 
 self.addEventListener('message', (event) => {
