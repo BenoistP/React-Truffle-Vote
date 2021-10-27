@@ -32,7 +32,6 @@ module.exports = {
   ,
 
   networks: {
-
   // networks : à commenter pour les tests
 // /*
     // GANACHE LOCAL
