@@ -91,4 +91,24 @@
         }
 
     }
+    ,
+    "Errors":
+    {
+      "4001": {
+        "title" : "Transation refusée",
+        "message":"L'utilisateur a refusé de signer la transaction",
+        "variant" : "warning"
+      },
+      "default": {
+        "title" : "Erreur",
+        "message":"Erreur",
+        "variant" : "danger"
+      }
+
+    },
+
+    "Formats" :{
+      "date" : "fr-FR"
+    }
+   
 }
