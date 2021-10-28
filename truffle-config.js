@@ -11,7 +11,12 @@ console.error("mnemonic = " + mnemonic)
 */
 
 
-const myInfuraProjectId = "b0905077aa2945e8926ca58ac91c2a39";
+const myInfuraProjectId = "";
+
+Wallet_mnemonic = process.env.Wallet_mnemonic
+Infura_ProjectId=process.env.InfuraProjectId
+Infura_ProjectSecret=process.env.InfuraProjectSecret
+
 
 const network_id_rinkeby = 4;
 const network_id_ropsten = 3;
