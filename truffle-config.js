@@ -4,15 +4,6 @@ require('dotenv').config()
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
-/*
-const fs = require('fs');
-const mnemonic = fs.readFileSync(".secret").toString().trim();
-console.error("mnemonic = " + mnemonic)
-*/
-
-
-const myInfuraProjectId = "";
-
 Wallet_mnemonic = process.env.Wallet_mnemonic
 Infura_ProjectId=process.env.InfuraProjectId
 Infura_ProjectSecret=process.env.InfuraProjectSecret
@@ -50,10 +41,7 @@ module.exports = {
    ,
     ropsten:
     {
-  //     provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/YOUR-PROJECT-ID`),
-  //     provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/`+myInfuraProjectId),
-       provider: () => new HDWalletProvider( process.env.mnemonic, `https://ropsten.infura.io/v3/`+myInfuraProjectId),
-  
+       provider: () => new HDWalletProvider( Wallet_mnemonic, `https://ropsten.infura.io/v3/`+ Infura_ProjectId ),
        network_id: network_id_ropsten,       // Ropsten's id
        gas: 5500000,        // Ropsten has a lower block limit than mainnet
        confirmations: 2,    // # of confs to wait between deployments. (default: 0)
