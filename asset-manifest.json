@@ -6,10 +6,10 @@
     "runtime-main.js": "/React-Truffle-Vote/static/js/runtime-main.3f9dff09.js",
     "runtime-main.js.map": "/React-Truffle-Vote/static/js/runtime-main.3f9dff09.js.map",
     "static/css/2.a5ff5de7.chunk.css": "/React-Truffle-Vote/static/css/2.a5ff5de7.chunk.css",
-    "static/js/2.f2e1ee23.chunk.js": "/React-Truffle-Vote/static/js/2.f2e1ee23.chunk.js",
-    "static/js/2.f2e1ee23.chunk.js.map": "/React-Truffle-Vote/static/js/2.f2e1ee23.chunk.js.map",
+    "static/js/2.b4ca2e64.chunk.js": "/React-Truffle-Vote/static/js/2.b4ca2e64.chunk.js",
+    "static/js/2.b4ca2e64.chunk.js.map": "/React-Truffle-Vote/static/js/2.b4ca2e64.chunk.js.map",
     "index.html": "/React-Truffle-Vote/index.html",
-    "precache-manifest.83ce071700e76dd9fe84834d448a9f74.js": "/React-Truffle-Vote/precache-manifest.83ce071700e76dd9fe84834d448a9f74.js",
+    "precache-manifest.962898a5857e03704ccf360743de2ae3.js": "/React-Truffle-Vote/precache-manifest.962898a5857e03704ccf360743de2ae3.js",
     "service-worker.js": "/React-Truffle-Vote/service-worker.js",
     "static/css/2.a5ff5de7.chunk.css.map": "/React-Truffle-Vote/static/css/2.a5ff5de7.chunk.css.map",
     "static/css/main.6d6b6060.chunk.css.map": "/React-Truffle-Vote/static/css/main.6d6b6060.chunk.css.map",
@@ -18,7 +18,7 @@
   "entrypoints": [
     "static/js/runtime-main.3f9dff09.js",
     "static/css/2.a5ff5de7.chunk.css",
-    "static/js/2.f2e1ee23.chunk.js",
+    "static/js/2.b4ca2e64.chunk.js",
     "static/css/main.6d6b6060.chunk.css",
     "static/js/main.69d57fc7.chunk.js"
   ]
