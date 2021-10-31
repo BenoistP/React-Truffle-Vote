@@ -18,7 +18,8 @@
     "react-scripts": "3.2.0",
     "react-toastr": "^3.0.0",
     "toastr": "^2.1.4",
-    "web3": "^1.6.0"
+    "web3": "^1.6.0",
+    "webpack": "^4.41.0"
   },
   "scripts": {
     "start": "cross-env BROWSER='brave' react-scripts start",
@@ -45,9 +46,9 @@
   },
   "devDependencies": {
     "@truffle/hdwallet-provider": "^1.5.1",
-    "gh-pages": "^3.2.3",
-    "webpack": "^4.41.0"
+    "gh-pages": "^3.2.3"
   },
-  "Githubhomepage": "https://BenoistP.github.io/React-Truffle-Vote/",
-  "homepage": "."
+  "Github_homepage": "https://BenoistP.github.io/React-Truffle-Vote/",
+  "Heroku_homepage": ".",
+  "homepage": "https://BenoistP.github.io/React-Truffle-Vote/"
 }
