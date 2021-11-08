@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/React-Truffle-Vote/static/css/main.73ad7682.chunk.css",
-    "main.js": "/React-Truffle-Vote/static/js/main.fa6fb90a.chunk.js",
-    "main.js.map": "/React-Truffle-Vote/static/js/main.fa6fb90a.chunk.js.map",
+    "main.js": "/React-Truffle-Vote/static/js/main.19ecf872.chunk.js",
+    "main.js.map": "/React-Truffle-Vote/static/js/main.19ecf872.chunk.js.map",
     "runtime-main.js": "/React-Truffle-Vote/static/js/runtime-main.3f9dff09.js",
     "runtime-main.js.map": "/React-Truffle-Vote/static/js/runtime-main.3f9dff09.js.map",
     "static/css/2.a5ff5de7.chunk.css": "/React-Truffle-Vote/static/css/2.a5ff5de7.chunk.css",
     "static/js/2.714d214c.chunk.js": "/React-Truffle-Vote/static/js/2.714d214c.chunk.js",
     "static/js/2.714d214c.chunk.js.map": "/React-Truffle-Vote/static/js/2.714d214c.chunk.js.map",
     "index.html": "/React-Truffle-Vote/index.html",
-    "precache-manifest.bd38c1511c784980a7666110d00a18b2.js": "/React-Truffle-Vote/precache-manifest.bd38c1511c784980a7666110d00a18b2.js",
+    "precache-manifest.69817d32c65b0e0444b8fe396781fb05.js": "/React-Truffle-Vote/precache-manifest.69817d32c65b0e0444b8fe396781fb05.js",
     "service-worker.js": "/React-Truffle-Vote/service-worker.js",
     "static/css/2.a5ff5de7.chunk.css.map": "/React-Truffle-Vote/static/css/2.a5ff5de7.chunk.css.map",
     "static/css/main.73ad7682.chunk.css.map": "/React-Truffle-Vote/static/css/main.73ad7682.chunk.css.map",
@@ -20,6 +20,6 @@
     "static/css/2.a5ff5de7.chunk.css",
     "static/js/2.714d214c.chunk.js",
     "static/css/main.73ad7682.chunk.css",
-    "static/js/main.fa6fb90a.chunk.js"
+    "static/js/main.19ecf872.chunk.js"
   ]
 }

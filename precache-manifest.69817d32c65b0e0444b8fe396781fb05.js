@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "f5c61ff5591c2148030c858671c5bca0",
+    "revision": "3437df58589f96ee4050821329915ec6",
     "url": "/React-Truffle-Vote/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/React-Truffle-Vote/static/css/2.a5ff5de7.chunk.css"
   },
   {
-    "revision": "93adca89b99f04cf346b",
+    "revision": "e82e7179436ec0f4054d",
     "url": "/React-Truffle-Vote/static/css/main.73ad7682.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/React-Truffle-Vote/static/js/2.714d214c.chunk.js"
   },
   {
-    "revision": "93adca89b99f04cf346b",
-    "url": "/React-Truffle-Vote/static/js/main.fa6fb90a.chunk.js"
+    "revision": "e82e7179436ec0f4054d",
+    "url": "/React-Truffle-Vote/static/js/main.19ecf872.chunk.js"
   },
   {
     "revision": "fe2359dd93588bf76e6f",
