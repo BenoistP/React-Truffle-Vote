@@ -1,14 +1,13 @@
 /* React */
 import React from "react";
 
-import Container from 'react-bootstrap/Container';
-
 /* Traduction */
 import { useTranslation } from 'react-i18next';
 // Changement de langue
 import i18n from './i18n';
 
 /* React - Bootstrap*/
+import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -27,11 +26,11 @@ const Toolbar = ( {handleReload, owner, connectedAccountAddr} ) =>
   return (
 <Container fluid className="bg-dark text-light">
   <Row>
-    <Col >
+    <Col>
       <Button className="mx-1" onClick={() => changeLanguage('fr-FR')} variant="primary" size="sm" > <FlagFill size={14} /> Fr </Button>
       <Button className="mx-1" onClick={() => changeLanguage('en')} variant="danger" size="sm" > <Flag size={14} /> En </Button>
     </Col>
-    <Col></Col>
+    <Col/>
     <Col>
       <Row>
         <Col className={(connectedAccountAddr===owner?"text-warning":"text-info")+""}>
@@ -40,7 +39,6 @@ const Toolbar = ( {handleReload, owner, connectedAccountAddr} ) =>
         <Col className={"text-warning"+(connectedAccountAddr===owner?" fw-bold":"")}>
           <small>{t("votingContract.app.toolbar.ownerAddr")} {owner}</small>
         </Col>
-
       </Row>
     </Col>
   </Row>

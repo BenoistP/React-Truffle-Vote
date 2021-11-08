@@ -5,6 +5,9 @@ import React from "react";
 import { useTranslation } from 'react-i18next';
 
 /* React - Bootstrap*/
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button';
 
 /* Icônes */
@@ -15,8 +18,6 @@ import  * as CONSTS from "./consts";
 
 const AdminToolbar = ( {workflowStatus, goToNextState, countAndTallyVotes} ) =>
 {
-
-//  const { t } = useTranslation();
     if ( workflowStatus === CONSTS.STATUSES_VALUES.STATUS_04_VOTINGSESSIONENDED )
     {
       return (
@@ -31,11 +32,20 @@ const AdminToolbar = ( {workflowStatus, goToNextState, countAndTallyVotes} ) =>
     }
 
     return (
+<Container fluid className="bg-dark text-light btn-group" role="group" aria-label="Admin toolbar">
+  <Row>
+    <Col>
+      <GoToNextStateButton goToNextState={goToNextState} size={14} />
+    </Col>
+  </Row>
+</Container>
 
+  );
+  /*
       <div className="btn-group" role="group" aria-label="Admin toolbar">
         <GoToNextStateButton goToNextState={goToNextState} />
     </div>
-  );
+  */
 }
 
 const GoToNextStateButton = ( {goToNextState} ) =>
@@ -68,4 +78,4 @@ function NoMoreActionAvailable({ })
   );
 }
 
-export { AdminToolbar /* , X, Y, Z */ };
+export { AdminToolbar };
