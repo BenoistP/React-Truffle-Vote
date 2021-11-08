@@ -380,7 +380,6 @@ componentDidMount = async () => {
 
  agetAllProposals = async() => {
   let allProposals = await this.getAllProposals();
-   alert("agetAllProposals:"+JSON.stringify(allProposals))
    this.setState({ allProposals });
   // return proposalsObjectsArray
  }
