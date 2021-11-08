@@ -1,0 +1,114 @@
+{
+  "votingContract" :
+    {
+      "app" :
+        {
+          "title": "Voting proposals"
+          ,
+    
+          "toolbar":
+            {
+              "reload" : "Reload",
+              "connectedAddr" : "Connected:",
+              "ownerAddr" : "Owner:"
+            }
+          ,
+          "dashboard":
+            {
+              "title": "Dashboard",
+              "status" :
+                {
+                  "title" : "Status",
+                  "states": {
+                    "0": "Registering voters",
+                    "1": "Proposals registration started",
+                    "2": "Proposals registration ended",
+                    "3": "Voting session started",
+                    "4": "Voting session ended",
+                    "5": "Votes tallied"
+                  }
+        
+                }
+
+            }
+            ,
+          "admin":
+            {
+              "title": "Administration",
+              "whitelist" :
+                {
+                  "whitelistedAddresses" : "Whithelisted accounts list",
+                  "whitelistNewAccount" : "Whithelist new accounts",
+                  "whitelist" : "Whithelist",
+                  "addressPlaceHolder" : "0x0000000000000000000000000000000000000000"
+                }
+                ,
+                "toolbar":
+                {
+                  "nextstate" : "Next step",
+                  "countAndTallyVotes": "Count and tally votes"
+                },
+                "action" :
+                {
+                  "end": "End. No more action available"
+                }
+    
+            }
+
+            ,
+            "user":
+            {
+              "action" :
+                {
+                  "wait": "Waiting for : ",
+                  "submitProposal": "Submit a proposal",
+                  "vote": "Vote",
+                  "result": "Voting results"
+                }
+                ,
+                "proposals" :
+                {
+                  "title" : "Proposals",
+                  "displayAll"   : "Display all",
+                  "input":
+                  {
+                    "title" : "Your proposals",
+                    "id": "#",
+                    "description" : "Description",
+                    "action" : "Action",
+                    "placeholder" : "Make your proposal !",
+                    "new" : "New proposal",
+                    "send" : "Send",
+                    "cancel" : "Cancel",
+                    "select" : "Select",
+                    "selected" : "Choosen",
+                    "results" : "Results"
+                    }
+                }
+    
+            }
+
+        }
+
+    }
+  ,
+  "Errors":
+  {
+    "4001": {
+      "title" : "Transaction signature denied",
+      "message":"User denied message signature",
+      "variant" : "warning"
+    },
+    "default": {
+      "title" : "Erreur",
+      "message":"Erreur",
+      "variant" : "danger"
+    }
+    
+  },
+
+  "Formats" :{
+    "date" : "en-US"
+  }
+
+}
