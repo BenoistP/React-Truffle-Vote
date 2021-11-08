@@ -20,8 +20,12 @@ i18n
   // init i18next
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
-    fallbackLng: 'en',
+    fallbackLng: 'en-GB',
     debug: true,
+
+    backend: {
+      loadPath: '/locales/translation-{{lng}}.json'
+    },
 
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
@@ -30,7 +34,6 @@ i18n
     // react i18next special options (optional)
     react: {
     useSuspense: false,
-    wait: false,
   },
   });
 

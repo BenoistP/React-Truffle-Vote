@@ -96,6 +96,7 @@
   {
     "4001": {
       "title" : "Transaction signature denied",
+      "message":"User denied message signature",
       "variant" : "warning"
     },
     "default": {
