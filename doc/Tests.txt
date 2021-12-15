@@ -1,0 +1,26 @@
+truffle test .\test\erc20.test.js --compile-none
+
+
+
+
+truffle test .\test\Voting.test.js --compile-none
+
+Pass TOUS les tests
+truffle test .\test\Voting.test.js -g "Voting_03" --compile-none 
+truffle test .\test\Voting.test.js -g "Voting_03-Ownable" --compile-none 
+truffle test .\test\Voting.test.js -g "Voting_03-Admin" --compile-none
+truffle test .\test\Voting.test.js -g "Voting_03-Admin_WL" --compile-none
+truffle test .\test\Voting.test.js -g "Voting_03-Voting" --compile-none
+
+truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Transitions" --compile-none
+truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Transitions-TransitionsOrder" --compile-none
+truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Transitions-CheckAdminOnly" --compile-none
+truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Transitions-CheckAdminOnly-NotWhitelisted" --compile-none
+truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Transitions-CheckAdminOnly-Whitelisted" --compile-none
+
+truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Process" --compile-none
+
+truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Process-1" --compile-none
+truffle test .\test\Voting.test.js -g "Voting_03-Voting_03-Process-2" --compile-none
+
+TESTER LES EVENEMENTS
